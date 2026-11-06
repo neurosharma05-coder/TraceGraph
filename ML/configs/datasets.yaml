@@ -1,0 +1,124 @@
+# TraceGraph ML Dataset Registry & Streaming Specifications
+# Hard Rules:
+# 1. No raw dataset is ever written to disk.
+# 2. Datasets are streamed over HTTP into RAM using chunked or range requests.
+# 3. Maximum memory working set is capped at 2 GB per streaming run.
+# 4. If remote stream is unavailable, fallback to the seeded synthetic generator.
+
+datasets:
+  1_m57_patents:
+    name: "M57-Patents Scenario"
+    source: "Digital Corpora"
+    url: "https://downloads.digitalcorpora.org/corpora/scenarios/2009-m57-patents/"
+    reference_paper: "Woods et al., 'Creating Realistic Corpora for Security and Forensic Education', ADFSL 2011"
+    streaming_mode: "http_range_tar"
+    sample_cap_mb: 30
+    subsets:
+      - "email/m57-email-mbox.gz"
+      - "network/m57-network.pcap"
+    used_for:
+      - "Clock-drift estimation (email Received headers vs file times)"
+      - "Timeline ordering ground-truth validation"
+
+  2_nist_cfreds:
+    name: "NIST CFReDS"
+    source: "National Institute of Standards and Technology"
+    url: "https://cfreds.nist.gov"
+    streaming_mode: "http_chunked_zip"
+    sample_cap_mb: 25
+    subsets:
+      - "Mobile Phone Image 01"
+      - "Hacking Investigation Scenario"
+    used_for:
+      - "Mobile call logs, SMS message extraction, cell tower handoffs"
+      - "Multi-source forensic correlation"
+
+  3_digital_corpora_index:
+    name: "Digital Corpora Scenarios Index"
+    source: "Digital Corpora"
+    url: "https://digitalcorpora.org/corpora/scenarios/"
+    streaming_mode: "rest_catalogue_stream"
+    sample_cap_mb: 5
+    used_for:
+      - "Scenario indexing and cross-verification catalog"
+
+  4_paysim:
+    name: "PaySim Synthetic Financial Transactions"
+    source: "Kaggle / EMSS 2016"
+    reference_paper: "Lopez-Rojas, Elmir, Axelsson, EMSS 2016"
+    streaming_mode: "streamed_csv_chunk"
+    sample_cap_rows: 250000
+    used_for:
+      - "Mule pass-through classification (rapid transfer then cash-out)"
+      - "Tabular baseline fraud classifier"
+    fallback: "in_memory_mule_simulator"
+
+  5_elliptic_plus_plus:
+    name: "Elliptic++ Bitcoin Transactions Graph"
+    source: "GitHub / DISL"
+    url: "https://github.com/git-disl/EllipticPlusPlus"
+    streaming_mode: "streamed_edge_list_chunks"
+    sample_cap_nodes: 35000
+    used_for:
+      - "GNN edge scoring and illicit node classification"
+      - "PyTorch Geometric GraphSAGE baseline"
+
+  6_ibm_amlsim:
+    name: "IBM AMLSim / AML-Data"
+    source: "IBM Research"
+    streaming_mode: "generator_in_memory"
+    sample_cap_transactions: 50000
+    used_for:
+      - "Laundering pattern rules (fan-in, fan-out, layering, cycles)"
+
+  7_czech_financial_pkdd99:
+    name: "Czech Financial Dataset (PKDD'99)"
+    source: "CTU Relational Dataset Repository"
+    url: "https://relational.fit.cvut.cz/dataset/Financial"
+    streaming_mode: "remote_sql_cursor"
+    sample_cap_rows: 100000
+    used_for:
+      - "Real anonymized banking topology & degree distribution"
+      - "Feature pipeline validation"
+
+  8_enron_email:
+    name: "Enron Email Dataset"
+    source: "Carnegie Mellon University"
+    url: "https://www.cs.cmu.edu/~enron/"
+    streaming_mode: "streamed_tar_gz"
+    sample_cap_messages: 25000
+    used_for:
+      - "Multi-hop identity resolution and email entity linking"
+
+  9_twitter_15_16:
+    name: "Twitter15/16 Rumour Propagation Graphs"
+    source: "Public benchmark"
+    streaming_mode: "archive_stream"
+    sample_cap_trees: 1500
+    used_for:
+      - "Directed cascade propagation and community detection"
+
+  10_ucf_crime:
+    name: "UCF-Crime Real-World Anomaly Video"
+    source: "CRCV University of Central Florida"
+    url: "https://www.crcv.ucf.edu/projects/real-world/"
+    streaming_mode: "opencv_video_stream_1fps"
+    sample_cap_clips: 12
+    used_for:
+      - "Person and vehicle detection with YOLO nano"
+      - "Optical CCTV cross-reference (synthetic plates for OCR benchmark)"
+
+  11_surveillance_cctv_dropbox:
+    name: "UCF-Crime Anomaly Detection Dataset (Surveillance Video Corpus)"
+    source: "Project Dropbox Repository (Anomaly-Detection-Dataset.zip)"
+    archive_size: "95.90 GB"
+    url: "https://www.dropbox.com/scl/fo/2aczdnx37hxvcfdo4rq4q/AOjRokSTaiKxXmgUyqdcI6k?rlkey=5bg7mxxbq46t7aujfch46dlvz&e=2&st=ymythnqh&dl=0"
+    streaming_mode: "sampled_clip_streaming"
+    sample_cap_mb: 25
+    used_for:
+      - "Optical surveillance video ingestion (Abuse, Robbery, RoadAccidents, Burglary)"
+      - "YOLOv26 vehicle & person detection"
+      - "Tesseract OCR license plate recognition (ANPR)"
+      - "Biometric appearance feature extraction"
+
+

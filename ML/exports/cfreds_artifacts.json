@@ -1,0 +1,50 @@
+{
+  "mobile": [
+    {
+      "artifact_type": "SMS",
+      "sender": "+919811092811",
+      "receiver": "+919820011223",
+      "ts": "2026-02-14T09:12:00Z",
+      "content": "paisa bhej diya ATM se nikaal le",
+      "hash": "9ea45ba92aec25fd638c4c3ec0cc7a2f0790cf0907f478ea8d6d2e1283db523e"
+    },
+    {
+      "artifact_type": "CallLog",
+      "caller": "+919811092811",
+      "callee": "+919876543210",
+      "ts": "2026-02-14T09:35:10Z",
+      "duration_s": 142,
+      "hash": "78d66c1f79db92beeb0d0bc3408d59c08ec53bebc1987351d6ef4f944443f6e5"
+    },
+    {
+      "artifact_type": "BrowserHistory",
+      "url": "https://netbanking.sbi.co.in",
+      "ts": "2026-02-14T08:50:00Z",
+      "browser": "Chrome-Mobile",
+      "hash": "935aed518ff1b2c9520589bd17027e633999bd82a71fa2fe06bf57f81af5d776"
+    }
+  ],
+  "partitions": [
+    {
+      "slot": "000",
+      "start_sector": 0,
+      "end_sector": 2047,
+      "length": 2048,
+      "desc": "Unallocated"
+    },
+    {
+      "slot": "001",
+      "start_sector": 2048,
+      "end_sector": 1050623,
+      "length": 1048576,
+      "desc": "EFI System (FAT32)"
+    },
+    {
+      "slot": "002",
+      "start_sector": 1050624,
+      "end_sector": 20971519,
+      "length": 19920896,
+      "desc": "Linux Root (ext4)"
+    }
+  ]
+}

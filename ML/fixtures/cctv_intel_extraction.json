@@ -1,0 +1,55 @@
+{
+  "sourceCategory": "cctv",
+  "modelEngine": "YOLOv26-Forensic-SUTRAM-2026",
+  "datasetSourceUrl": "https://www.dropbox.com/scl/fo/2aczdnx37hxvcfdo4rq4q/AOjRokSTaiKxXmgUyqdcI6k?rlkey=5bg7mxxbq46t7aujfch46dlvz&e=2&st=ymythnqh&dl=0",
+  "sourceFile": "cctv_highway_toll_cam04.mp4",
+  "sha256": "ea586af93cd795c9947fd52f2bb133b7b8dfb4f8e6894607181a6eec89992203",
+  "cameraId": "toll_cam_04",
+  "cameraLocation": "NH-48 Checkpoint Toll ANPR (Sector 18 Exit)",
+  "coordinates": {
+    "lat": 28.4595,
+    "lng": 77.0722
+  },
+  "rawTimestamp": "2026-02-14T03:00:22Z",
+  "calibratedTimestamp": "2026-02-14T03:04:34Z",
+  "clockOffset": "-04m 12s drift (Calibrated)",
+  "anpr": {
+    "plateNumber": "DL-3C-AZ-9912",
+    "vehicleModel": "Maruti Suzuki Swift (White)",
+    "confidence": 0.94
+  },
+  "biometrics": {
+    "matchedSuspectId": "n_suspect_1",
+    "matchedSuspectName": "Vikram Malhotra",
+    "cosineSimilarity": 0.7497,
+    "status": "confirmed"
+  },
+  "graphNodes": [
+    {
+      "id": "cctv_cam_04",
+      "label": "ANPR Toll Cam 04",
+      "category": "cctv",
+      "confidence": 0.98
+    },
+    {
+      "id": "vehicle_swift_9912",
+      "label": "Vehicle (DL-3C-AZ-9912)",
+      "category": "suspect",
+      "confidence": 0.95
+    }
+  ],
+  "graphLinks": [
+    {
+      "source": "n_suspect_1",
+      "target": "vehicle_swift_9912",
+      "relation": "REGISTERED_OWNER",
+      "confidence": 0.96
+    },
+    {
+      "source": "vehicle_swift_9912",
+      "target": "cctv_cam_04",
+      "relation": "CAPTURED_BY",
+      "confidence": 0.95
+    }
+  ]
+}

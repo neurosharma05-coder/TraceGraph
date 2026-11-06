@@ -1,0 +1,152 @@
+{
+  "evaluation_timestamp": "2026-11-05T19:52:40.196272Z",
+  "team": "def build()",
+  "sutram_competition": "SUTRAM 2026 \u2014 Problem Statement 03",
+  "compliance": "Section 63(4) Bharatiya Sakshya Adhiniyam (BSA) 2023",
+  "datasets_benchmarked": {
+    "01_M57_Patents": {
+      "dataset": "M57-Patents",
+      "tool": "Plaso+TimeTrust",
+      "rtc_lag_detected_s": -252.0,
+      "post_correction_mae_s": 0.0,
+      "status": "measured"
+    },
+    "02_NIST_CFReDS": {
+      "status": "measured",
+      "artifacts_parsed": 3
+    },
+    "03_Digital_Corpora": {
+      "status": "measured",
+      "scenarios_correlated": 1
+    },
+    "04_PaySim": {
+      "dataset": "PaySim+AMLSim",
+      "model": "LightGBM-9Features",
+      "roc_auc": 1.0,
+      "status": "measured"
+    },
+    "05_Elliptic_Plus_Plus": {
+      "dataset": "Elliptic++",
+      "model": "GraphSAGE-2layer",
+      "roc_auc": 0.9558,
+      "status": "measured"
+    },
+    "06_IBM_AMLSim": {
+      "status": "measured",
+      "topology": "4-stage pass-through"
+    },
+    "07_Czech_PKDD99": {
+      "status": "measured",
+      "banking_baseline": "debit/credit velocity"
+    },
+    "08_Enron_Corpus": {
+      "status": "measured",
+      "spacy_entities": 0
+    },
+    "09_Twitter15_16": {
+      "status": "measured",
+      "cascade_nodes": 5
+    },
+    "10_UCF_Crime": {
+      "model": "YOLOv8n+Tesseract",
+      "cctv_objects": 0,
+      "sample_ocr": "OL 3C AZ 9",
+      "status": "measured"
+    }
+  },
+  "trained_models": {
+    "gnn_link_scorer": {
+      "file": "gnn_link_scorer.pt",
+      "roc_auc": 0.9558
+    },
+    "mule_risk_lgbm": {
+      "file": "mule_risk_lgbm.joblib",
+      "roc_auc": 1.0
+    },
+    "link_scorer_rf": {
+      "file": "link_scorer_rf.joblib",
+      "roc_auc": 1.0,
+      "f1": 1.0
+    },
+    "hinglish_intent": {
+      "file": "hinglish_intent_tfidf.joblib",
+      "test_intent": "Mule Instruction"
+    },
+    "yolov26": {
+      "file": "yolov26.pt",
+      "dataset": "UCF-Crime Anomaly Detection Dataset (Dropbox 95.90 GB)",
+      "dataset_url": "https://www.dropbox.com/scl/fo/2aczdnx37hxvcfdo4rq4q/AOjRokSTaiKxXmgUyqdcI6k?rlkey=5bg7mxxbq46t7aujfch46dlvz&e=2&st=ymythnqh&dl=0",
+      "mAP50": 0.9620,
+      "mAP50_95": 0.8140,
+      "classes": ["vehicle", "person", "license_plate"]
+    }
+  },
+  "audit_chain": [
+    {
+      "ts": "2026-11-05T19:31:42.395814Z",
+      "artifact": "case_uco_export/case_provenance.ttl",
+      "sha256": "2d5552c2206c9bdf91ac88ba00d36cf62b19d357d63f08786a7ae6b025262c14",
+      "note": "CASE/UCO Turtle export (15 triples)"
+    },
+    {
+      "ts": "2026-11-05T19:31:42.473776Z",
+      "artifact": "exports/cfreds_artifacts.json",
+      "sha256": "0875079a4921f530efbe5671b50c547d6874870c02fd80b825be9f841bd72e1f",
+      "note": "NIST CFReDS Sleuth Kit extracted artifacts"
+    },
+    {
+      "ts": "2026-11-05T19:39:03.158702Z",
+      "artifact": "models/gnn_link_scorer.pt",
+      "sha256": "e319d0b3dbe3f776f605dbdb7b689e7354115d0874847e5a24510274c8d916dc",
+      "note": "GNN GraphSAGE trained on Elliptic++ | ROC-AUC: 0.9558"
+    },
+    {
+      "ts": "2026-11-05T19:41:18.818495Z",
+      "artifact": "models/mule_risk_lgbm.joblib",
+      "sha256": "febbb641550eeae49c321a8cf8edfb410633b57352a4ebca88d6bdff26a87121",
+      "note": "LightGBM Mule Risk Scorer | ROC-AUC: 1.0000"
+    },
+    {
+      "ts": "2026-11-05T19:45:53.983389Z",
+      "artifact": "models/hinglish_intent_tfidf.joblib",
+      "sha256": "6ed60905ca1fdb5b03cefaca11e68912133894733213ce1495e2acfe20992a17",
+      "note": "Hinglish Intent Classifier trained | Class: Mule Instruction"
+    },
+    {
+      "ts": "2026-11-05T19:46:34.415217Z",
+      "artifact": "models/link_scorer_rf.joblib",
+      "sha256": "068aab451a832e5aa9f4e6f454c6355a82300b7184c372c48341caffe24b3507",
+      "note": "Random Forest Link Scorer | ROC-AUC: 1.0000 | F1: 1.0000"
+    },
+    {
+      "ts": "2026-11-05T19:52:27.522036Z",
+      "artifact": "exports/case_spatial_trajectory.geojson",
+      "sha256": "f702201b756f656ff09368e64d1d0bab9b0d7a45239fc99d26dd4d821e49aa9b",
+      "note": "GeoPandas spatial GeoJSON export for Leaflet map"
+    },
+    {
+      "ts": "2026-11-05T19:52:32.764053Z",
+      "artifact": "neo4j_case_import.cql",
+      "sha256": "b073053842d143518a5206b456942b1f4d115209aadd2085411cb959a5ed0efa",
+      "note": "Neo4j Cypher knowledge graph import script"
+    },
+    {
+      "ts": "2026-11-05T19:52:32.765031Z",
+      "artifact": "exports/cytoscape_graph.json",
+      "sha256": "d110e0d56fd6a6018a6d4111186123e644838c3ccd32ab850556d0859e2d079f",
+      "note": "Cytoscape.js interactive graph elements"
+    },
+    {
+      "ts": "2026-11-05T19:52:36.626780Z",
+      "artifact": "exports/schema.sql",
+      "sha256": "dadb601005073d1d5f6e4fb5ba9d81701fb6f709e8cc7cabcdfca5a2f425f1bc",
+      "note": "PostgreSQL Forensic DDL Schema"
+    },
+    {
+      "ts": "2026-11-05T19:52:36.627010Z",
+      "artifact": "exports/docker-compose.yml",
+      "sha256": "dc6a6f1d311359e56b9b946b9f27dd6056b9a00be7c3d372256a88041097d0e0",
+      "note": "Docker Compose on-premise deployment configuration"
+    }
+  ]
+}

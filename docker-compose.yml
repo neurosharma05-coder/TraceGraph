@@ -1,0 +1,71 @@
+version: "3.8"
+
+services:
+  # -------------------------------------------------------------
+  # Microservice 1: Next.js Frontend Presentation Layer (L6)
+  # -------------------------------------------------------------
+  frontend:
+    build:
+      context: ./FRONTEND
+      dockerfile: Dockerfile
+    container_name: trace-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_BACKEND_URL=http://localhost:8001
+      - NEXT_PUBLIC_ML_URL=http://localhost:8002
+    depends_on:
+      backend:
+        condition: service_started
+    networks:
+      - trace-network
+
+  # -------------------------------------------------------------
+  # Microservice 2: FastAPI Core Orchestrator & Case Gateway (L1-L2)
+  # -------------------------------------------------------------
+  backend:
+    build:
+      context: ./BACKEND
+      dockerfile: Dockerfile
+    container_name: trace-backend
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    environment:
+      - PORT=8001
+      - ML_SERVICE_URL=http://ml-service:8002
+    volumes:
+      - ./BACKEND/uploads:/app/uploads
+      - ./ML:/app/ML:ro
+    depends_on:
+      ml-service:
+        condition: service_started
+    networks:
+      - trace-network
+
+  # -------------------------------------------------------------
+  # Microservice 3: GNN / Time-Trust ML Intelligence Engine (L3-L5)
+  # -------------------------------------------------------------
+  ml-service:
+    build:
+      context: ./ML
+      dockerfile: Dockerfile
+    container_name: trace-ml-service
+    restart: unless-stopped
+    ports:
+      - "8002:8002"
+    environment:
+      - PORT=8002
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./ML/exports:/app/exports
+      - ./ML/models:/app/models
+    networks:
+      - trace-network
+
+networks:
+  trace-network:
+    driver: bridge
+

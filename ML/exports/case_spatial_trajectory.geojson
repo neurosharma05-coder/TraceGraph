@@ -1,0 +1,10 @@
+{
+"type": "FeatureCollection",
+"name": "case_spatial_trajectory",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "entity": "S001", "lat": 28.6315, "lon": 77.2167, "ts": "2026-02-14T08:45:12Z", "loc": "Connaught Place", "parsed_time": "2026-02-14T08:45:12Z" }, "geometry": { "type": "Point", "coordinates": [ 77.2167, 28.6315 ] } },
+{ "type": "Feature", "properties": { "entity": "S001", "lat": 28.4595, "lon": 77.0266, "ts": "2026-02-14T09:12:00Z", "loc": "Gurugram Sector-29", "parsed_time": "2026-02-14T09:12:00Z" }, "geometry": { "type": "Point", "coordinates": [ 77.0266, 28.4595 ] } },
+{ "type": "Feature", "properties": { "entity": "S001", "lat": 28.5355, "lon": 77.391, "ts": "2026-02-14T09:15:10Z", "loc": "Noida Sector-62 (IMPOSSIBLE)", "parsed_time": "2026-02-14T09:15:10Z" }, "geometry": { "type": "Point", "coordinates": [ 77.391, 28.5355 ] } }
+]
+}

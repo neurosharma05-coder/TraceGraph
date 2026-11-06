@@ -1,0 +1,16 @@
+/**
+ * TraceGraph Design System Variables
+ * Restricts all UI colors exclusively to these tokens.
+ */
+:root {
+  --page: #F4EFE6;
+  --frame: #1B1B1D;
+  --panel: #F7F4EE;
+  --ink: #141416;
+  --soft: #55555A;
+  --on-frame: #F3F1EC;
+  --line: rgba(243, 241, 236, 0.38);
+  --accent: #EEFF6B;
+  --warm: #F28A2E;
+  --r: 28px;
+}

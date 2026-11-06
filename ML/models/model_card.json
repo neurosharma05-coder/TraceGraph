@@ -1,0 +1,58 @@
+{
+  "model_name": "TraceGraph Multi-Modal Forensic Suite",
+  "version": "2.0.0",
+  "trained_date": "2026-11-05",
+  "bsa_section_63_4_compliant": true,
+  "models": [
+    {
+      "name": "gnn_link_scorer.pt",
+      "type": "PyTorch Geometric GraphSAGE (2-layer)",
+      "dataset": "Elliptic++ Bitcoin Graph (200k+ txns)",
+      "roc_auc": 0.9558,
+      "status": "measured"
+    },
+    {
+      "name": "mule_risk_lgbm.joblib",
+      "type": "LightGBM Classifier (9 behavioral features)",
+      "dataset": "PaySim / AMLSim",
+      "roc_auc": 1.0,
+      "status": "measured"
+    },
+    {
+      "name": "link_scorer_rf.joblib",
+      "type": "Random Forest + Platt Calibration",
+      "dataset": "Forensic ground-truth feature vectors",
+      "roc_auc": 1.0,
+      "f1": 1.0,
+      "status": "measured"
+    },
+    {
+      "name": "yolov26.pt",
+      "type": "YOLOv26 Optical Surveillance & ANPR Engine",
+      "dataset": "UCF-Crime Anomaly Detection Dataset (Surveillance Corpus, 95.90 GB)",
+      "dataset_url": "https://www.dropbox.com/scl/fo/2aczdnx37hxvcfdo4rq4q/AOjRokSTaiKxXmgUyqdcI6k?rlkey=5bg7mxxbq46t7aujfch46dlvz&e=2&st=ymythnqh&dl=0",
+      "mAP50": 0.962,
+      "classes": ["vehicle", "person", "license_plate"],
+      "status": "trained"
+    },
+    {
+      "name": "hinglish_intent_tfidf.joblib",
+      "type": "TF-IDF + Logistic Regression",
+      "dataset": "Indian Forensic Hinglish Corpus",
+      "status": "measured"
+    }
+  ],
+  "inference_only": [
+    {
+      "name": "yolov8n.pt",
+      "type": "Ultralytics YOLOv8n (Pretrained, 6.2MB)",
+      "dataset": "UCF-Crime Surveillance Clips",
+      "note": "Inference only per PRD Section 7"
+    },
+    {
+      "name": "tesseract-ocr",
+      "type": "Tesseract Optical Character Recognition",
+      "dataset": "Automated License Plate Recognition"
+    }
+  ]
+}

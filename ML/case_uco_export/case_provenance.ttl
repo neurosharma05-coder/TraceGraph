@@ -1,0 +1,24 @@
+@prefix case-inv: <https://ontology.caseontology.org/case/investigation/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+
+<http://tracegraph.org/case/CR-2026-0942> a case-inv:InvestigativeCase ;
+    case-inv:relevantObject <http://tracegraph.org/entity/acct_ACC1001>,
+        <http://tracegraph.org/entity/imei_358240051111110>,
+        <http://tracegraph.org/entity/phone_9811092811>,
+        <http://tracegraph.org/entity/veh_DL3CAZ9912> ;
+    uco-core:description "GNN-based multi-modal digital evidence correlation across 7 channels" ;
+    uco-core:name "Operation Mule Trail — NCR Extortion Syndicate" .
+
+<http://tracegraph.org/entity/acct_ACC1001> a uco-observable:BankAccount ;
+    uco-core:name "ACC-1001 (SBI Primary)" .
+
+<http://tracegraph.org/entity/imei_358240051111110> a uco-observable:Device ;
+    uco-core:name "358240051111110" .
+
+<http://tracegraph.org/entity/phone_9811092811> a uco-observable:PhoneAccount ;
+    uco-core:name "+91 98110-92811" .
+
+<http://tracegraph.org/entity/veh_DL3CAZ9912> a uco-observable:Vehicle ;
+    uco-core:name "DL 3C AZ 9912" .
+
