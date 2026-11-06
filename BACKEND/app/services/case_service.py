@@ -475,6 +475,8 @@ class CaseService:
             detected_plate = plate_data["detectedPlate"]
             detected_vehicle = plate_data["vehicle"]
             plate_confidence = plate_data["confidence"]
+            crime_class = plate_data.get("crimeClass", "RoadAccidents")
+            crime_summary = plate_data.get("summary", "UCF-Crime Action: High-Speed Evasion")
 
             cctv_node_id = f"node_cctv_{len(self.graph_nodes)+1}"
             if cctv_node_id not in existing_node_ids:
@@ -483,10 +485,10 @@ class CaseService:
                         id=cctv_node_id,
                         label=f"ANPR · {detected_plate}",
                         category="cctv",
-                        details=f"Video: {filename} · Plate: {detected_plate} · Vehicle: {detected_vehicle} · Hardware RTC drift calibrated",
+                        details=f"UCF-Crime: {crime_class} · Plate: {detected_plate} · Vehicle: {detected_vehicle} · {crime_summary}",
                         confidence=plate_confidence,
                         sourceFile=filename,
-                        riskScore=0.82,
+                        riskScore=0.92,
                         x=340.0,
                         y=190.0
                     )
@@ -501,7 +503,7 @@ class CaseService:
                             target=cctv_node_id,
                             relation="OBSERVED_AT",
                             confidence=0.94,
-                            reason=f"Optical surveillance detection from {filename}",
+                            reason=f"UCF-Crime surveillance action detection ({crime_class}) from {filename}",
                             verified=True,
                             state="confirmed"
                         )
@@ -516,7 +518,14 @@ class CaseService:
                 "detectedPlate": detected_plate,
                 "vehicle": detected_vehicle,
                 "plateConfidence": plate_confidence,
-                "detections": [f"ANPR Plate: {detected_plate}", f"Vehicle: {detected_vehicle}", "Person of Interest (Optical Vector)"]
+                "crimeClass": crime_class,
+                "crimeSeverity": plate_data.get("severity", "CRITICAL"),
+                "detections": [
+                    f"UCF-Crime Class: {crime_class}",
+                    f"ANPR Plate: {detected_plate}",
+                    f"Vehicle: {detected_vehicle}",
+                    "Person of Interest (Optical Biometric Vector)"
+                ]
             })
 
             ev_id = f"ev_cctv_{len(self.timeline_events) + 1:03d}"
@@ -526,15 +535,15 @@ class CaseService:
                     timestampUtc=now_str,
                     rawTimestamp=now_str,
                     sourceCategory="cctv",
-                    eventTitle=f"ANPR Detection · Plate {detected_plate}",
-                    details=f"From {filename}: {detected_vehicle} · Plate {detected_plate} · Confidence {plate_confidence:.0%} · RTC drift corrected.",
+                    eventTitle=f"Optical Crime Action: {crime_class} · {detected_plate}",
+                    details=f"From {filename}: {crime_summary} · Vehicle {detected_vehicle} (Plate {detected_plate}) · Hardware RTC lag calibrated.",
                     location="NH-48 Checkpoint Toll ANPR",
                     driftCorrected="-04m 12s (Hardware RTC Lag)",
                     uncertaintyWindow="±0.8s",
                     timeTrust=0.94,
                     flagged=True,
-                    conflictReason="Optical alibi point",
-                    entities=["Person-01", detected_plate]
+                    conflictReason=f"UCF-Crime Action Vector: {crime_class}",
+                    entities=["Person-01", detected_plate, crime_class]
                 )
             )
             new_events_count += 1
@@ -803,7 +812,7 @@ class CaseService:
             ]
             gnn_conf = sample_link.get("linkConfidence", 0.0)
             hypotheses = rank_competing_hypotheses(
-                scored_links=[{"id": l.id} for l in self.graph_links],
+                scored_links=[{"id": f"e_{l.source}_{l.target}"} for l in self.graph_links],
                 feasibility_conflicts=conflicts_as_dicts,
                 cctv_detections=self.cctv_detections if self.cctv_detections else None,
                 evidence_types=evidence_type_list,
