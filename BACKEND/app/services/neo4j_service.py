@@ -1,12 +1,3 @@
-"""
-Neo4j Graph Streaming Service for TraceGraph SUTRAM 2026.
-Streams forensic evidence nodes and links via Cypher MERGE into a live Neo4j instance.
-Compliance: Section 63(4) Bharatiya Sakshya Adhiniyam (BSA), 2023.
-
-Connection is optional — if Neo4j is not reachable, all operations are silently skipped
-so the platform continues to function normally via Cytoscape.js in-memory graph.
-"""
-
 import os
 import logging
 from typing import Optional, List, Any

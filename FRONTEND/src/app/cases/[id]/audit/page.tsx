@@ -161,7 +161,7 @@ export default function CaseAuditPage({ params }: { params: Promise<{ id: string
           <div className="overflow-x-auto pb-2">
             <div className="flex items-center gap-3 min-w-[700px]">
               {files.map((file, idx) => (
-                <React.Fragment key={file.id}>
+                <React.Fragment key={`${file.id}-${idx}`}>
                   <div className="p-3.5 rounded-xl border border-[rgba(20,20,22,0.1)] bg-white space-y-1.5 shrink-0 w-48 text-xs">
                     <div className="flex justify-between items-center text-[10px] text-[var(--soft)]">
                       <span>Block #{String(idx + 1).padStart(2, '0')}</span>

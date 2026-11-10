@@ -156,7 +156,7 @@ export default function Page2_EvidenceVault() {
             </thead>
             <tbody className="divide-y divide-[rgba(20,20,22,0.06)] text-[var(--ink)]">
               {filteredFiles.map((file, idx) => (
-                <tr key={file.id} className="hover:bg-black/[0.015] transition-colors">
+                <tr key={`${file.id}-${idx}`} className="hover:bg-black/[0.015] transition-colors">
                   <td className="py-4 px-4 text-[var(--soft)]">
                     #{String(idx + 1).padStart(3, '0')}
                   </td>

@@ -58,14 +58,6 @@ Anyone can clone the repository and run the full stack locally with just Python 
 
 ---
 
-### Step 1: Clone the Repository
-```bash
-git clone https://github.com/<your-username>/TraceGraph.git
-cd TraceGraph
-```
-
----
-
 ### Step 2: Start the Backend API (FastAPI)
 Open a new terminal:
 ```bash
@@ -241,8 +233,3 @@ TraceGraph is engineered specifically to meet the strict evidentiary standards o
 - **Physical Time-Trust Calibration**: Real hardware RTC drift on disparate logging devices (e.g. CCTV clocks lag by -04m 12s) is dynamically normalized against NTP reference clocks before timeline sequencing.
 
 ---
-
-## 👥 Development Team
-
-Built for **SUTRAM 2026** · Problem Statement 03 (*Digital Evidence Correlation and Crime Reconstruction Engine*)  
-**Team**: `def build()`

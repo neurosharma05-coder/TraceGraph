@@ -25,6 +25,8 @@ venv/
 checkpoints/
 *.pt.bak
 *.ckpt
+*.pt
+ML/models/easyocr/
 
 # Environment & Secrets
 .env
