@@ -460,7 +460,7 @@ class CaseService:
         # Category 6: CCTV & Surveillance Video
         if category == "cctv":
             # Attempt real keyframe decode and ANPR plate extraction
-            plate_data = {"detectedPlate": "DL-3C-AZ-9912", "confidence": 0.95, "vehicle": "Maruti Suzuki Swift (White)"}
+            plate_data = {"detectedPlate": "Plate Unreadable / Obscured (Live Frame)", "confidence": 0.85, "vehicle": "Unidentified Target", "crimeClass": "Surveillance Checkpoint", "severity": "NORMAL", "summary": "Optical inspection completed"}
             try:
                 from app.config import UPLOAD_DIR
                 from app.services.evidence_service import evidence_service
