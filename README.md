@@ -126,6 +126,17 @@ TraceGraph rejects synthetic toy datasets in production. All 7 production models
 | **§6** | **CCTV / ANPR Vision** | Ultralytics YOLOv8n + OpenCV + OCR | Indian Traffic Feeds + Snatch 1.0 Dataset | **96.20% mAP@50** | `POST /ml/india/predict/cctv` |
 | **§7** | **Forensic Link Scorer** | PyTorch GraphSAGE Link Scorer (`16 → 64 → 32`) | Multi-Source Indian Forensic Crime Graph | **95.58% Accuracy** | `POST /ml/india/predict/link-india` |
 
+### 📥 Auto-Download Pre-Trained Weights
+
+For users cloning from GitHub or downloading the repository `.ZIP` archive, model weights are excluded from Git to keep the repository lightweight. You can auto-fetch and verify all models (7.16 MB package) with one command:
+
+```sh
+# Verify or auto-download all pre-trained models
+python ML/scripts/download_models.py
+```
+
+Starting the backend with `python run_server.py` also automatically verifies and fetches any missing weights on first launch.
+
 ---
 
 ## 🏛️ 10 Integrated Investigative Modules
