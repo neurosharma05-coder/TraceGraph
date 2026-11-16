@@ -1,235 +1,306 @@
-# TraceGraph: Digital Crime Reconstruction Framework
+# TraceGraph (TRACE)
 
-> **"Where Every Trace Connects"**  
-> An automated, multi-source digital forensic correlation and crime reconstruction framework. It ingests heterogeneous digital evidence, calibrates clock drift via a physical Time-Trust model, resolves multi-modal identities, scores associations using Graph Neural Networks (GNNs), evaluates spatio-temporal feasibility, and synthesizes court-admissible electronic reports compliant with **Section 63(4) of the Bharatiya Sakshya Adhiniyam (BSA), 2023**.
+[![TraceGraph Platform Hero](https://files.catbox.moe/wg77c4.jpg)](https://files.catbox.moe/wg77c4.jpg)
+<p align="center">
+  <em>Figure 1: TraceGraph Forensic Reconstruction Platform — <a href="https://files.catbox.moe/wg77c4.jpg">View Full Resolution Image</a></em>
+</p>
 
----
+<p align="center">
+  <strong>An Automated Multi-Source Digital Forensic Correlation & Crime Reconstruction Framework</strong><br>
+  Built for Indian Law Enforcement & Court Admissibility under Section 63(4) of the Bharatiya Sakshya Adhiniyam (BSA), 2023
+</p>
 
-## 📊 Machine Learning Architecture & Benchmark Scores
-
-TraceGraph integrates deep learning, calibrated ensemble methods, optical computer vision, and mathematical physics rules to guarantee explainable and legally defensible forensic reconstruction.
-
-| Model / Subsystem | Architecture & Configuration | Key Metric | ROC-AUC | Latency / Calibration | Benchmark Dataset |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **GNN Link Scorer** | 2-Layer PyTorch GraphSAGE (`183 → 64 → 2`), Mean Aggregation | **95.58% Accuracy** | **0.9558** | **7ms on CPU** (Live forward pass) | Elliptic++ Graph Benchmark |
-| **Mule Risk Detector** | LightGBM Classifier, **250 Trees**, Balanced Class Weight | **F1 Score: 1.0 (100%)** | **1.0000** | **Platt Calibration** (`CalibratedClassifierCV`) | PaySim + IBM AMLSim |
-| **Forensic Link Scorer** | Random Forest Classifier, **200 Trees**, Balanced Class Weight | **F1 Score: 1.0 (100%)** | **1.0000** | **Platt Calibration** (Sigmoidal) | Multi-Source Forensic Triples |
-| **Hinglish NLP Pipeline** | Sub-word n-gram TF-IDF + Logistic Classifier | **98.40% Accuracy** | — | Calibrated Log-Loss | Code-Mixed Cybercrime Slang |
-| **YOLOv26 Optical Engine** | YOLOv26 SUTRAM Architecture + OpenCV + Tesseract OCR | **96.20% mAP@50** | — | Keyframe ANPR & Biometrics | SUTRAM Surveillance Dataset (Dropbox) |
-| **Spatial Feasibility Engine** | Closed-form Haversine Formula + Velocity Vector Bounds | **100% Spatial Precision** | — | Deterministic Physics Validation | NCR Road & Flight Corridors |
-| **Beam Search Optimizer** | Dynamic Sigmoidal Hypothesis Search | **Dynamic Likelihood** | — | Reactive to links & conflict velocity | Crime Storyline Reconstruction |
-| **Neo4j Graph Engine** | Live Cypher Streaming (`MERGE`) + Graph Database | **Real-Time Sync** | — | Offline-resilient fallback | Property Graph Visualization |
-
-### Core Subsystem Deep-Dive
-
-1. **PyTorch GNN Link Scorer (`gnn_model.py`)**:
-   - Model class: `ForensicGraphSAGELinkScorer` matching trained weights in [`ML/models/gnn_link_scorer.pt`](ML/models/gnn_link_scorer.pt).
-   - Ingests 183-dimensional node feature vectors (transaction patterns, temporal variance, geographic coordinates, communication reciprocity).
-   - Real-time forward pass computes binary softmax logits for edge association probability in **<10ms on CPU**.
-
-2. **Optical Surveillance & ANPR (`cctv_processor.py`)**:
-   - Decodes video streams, extracts keyframe at suspect vehicle window (1.5s toll corridor), applies bilateral noise filtering + Otsu adaptive thresholding.
-   - Tesseract OCR extracts Indian license plate notations (`DL-3C-AZ-9912`).
-   - Connected to Colab-verified intelligence payload (`cctv_intel_extraction.json`) with cosine similarity biometric match against suspects.
-
-3. **Dynamic Beam Search Engine (`beam_search.py`)**:
-   - Evaluates candidate storylines using a dynamic sigmoidal likelihood formula:
-     $$\text{Likelihood}(\text{Alpha}) = \sigma\left(\frac{N_{\text{confirmed\_links}} \times 1.2 - N_{\text{conflicts}} \times 2.8 + \text{GNN\_Confidence} \times 10}{10}\right)$$
-     $$\text{Likelihood}(\text{Beta}) = 1.0 - \text{Likelihood}(\text{Alpha})$$
-   - Real conflict velocities (>130 km/h road limit or >850 km/h flight ceiling) generate dynamic score penalties, automatically elevating defense alibi hypotheses.
-
-4. **Live Neo4j Streaming Engine (`neo4j_service.py`)**:
-   - Streams `Case`, `ForensicNode`, `TimelineEvent`, and `FORENSIC_LINK` relationships into Neo4j via Cypher `MERGE` statements.
-   - Built with an **offline-resilient fallback**: if a local Neo4j instance is not running, the platform continues seamlessly in in-memory Cytoscape.js mode without throwing errors.
-
-5. **Bilingual Hinglish NLP**:
-   - Classifies Indian cybercrime communication intent (Mule Instructions, Extortion Demands, Meeting Coordination, Benign) across Hindi-English code-mixed transcripts with **98.4% accuracy**.
+<p align="center">
+  <a href="#license"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a>
+  <a href="https://www.python.org"><img src="https://img.shields.io/badge/python-3.10%20%7C%203.11-3776AB.svg?logo=python&logoColor=white" alt="Python"></a>
+  <a href="https://fastapi.tiangolo.com"><img src="https://img.shields.io/badge/FastAPI-0.109+-009688.svg?logo=fastapi&logoColor=white" alt="FastAPI"></a>
+  <a href="https://nextjs.org"><img src="https://img.shields.io/badge/Next.js-15.4-black.svg?logo=next.js&logoColor=white" alt="Next.js"></a>
+  <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-5.9-3178C6.svg?logo=typescript&logoColor=white" alt="TypeScript"></a>
+  <a href="#legal--statutory-compliance"><img src="https://img.shields.io/badge/Compliance-BSA%20Sec%2063(4)-15803d.svg" alt="BSA 2023 Compliant"></a>
+  <a href="#-machine-learning-architecture"><img src="https://img.shields.io/badge/Training%20Data-100%25%20Indian%20Real-orange.svg" alt="Indian Data"></a>
+</p>
 
 ---
 
-## 🚀 Quickstart & Setup Guide
+## Table of Contents
 
-Anyone can clone the repository and run the full stack locally with just Python and Node.js.
+- [Overview](#-overview)
+- [Visual Forensic Pipelines & Architecture](#-visual-forensic-pipelines--architecture)
+  - [1. Interactive Forensic Knowledge Graph (77 Nodes)](#1-interactive-forensic-knowledge-graph-77-nodes)
+  - [2. Multi-Modal Network Topology & GNN Structure](#2-multi-modal-network-topology--gnn-structure)
+  - [3. Computer Vision & CCTV ANPR Engine](#3-computer-vision--cctv-anpr-engine)
+  - [4. Cyber-Physical & IoT Intrusion Testbed](#4-cyber-physical--iot-intrusion-testbed)
+- [Machine Learning Architecture](#-machine-learning-architecture)
+- [10 Integrated Investigative Modules](#-10-integrated-investigative-modules)
+- [Quick Start](#-quick-start)
+- [API Reference](#-api-reference)
+- [Legal & Statutory Compliance](#-legal--statutory-compliance)
+- [Docker Deployment](#-docker-deployment)
+- [Project Structure](#-project-structure)
+- [Team & License](#-team--license)
+
+---
+
+## Overview
+
+**TraceGraph** is an industrial-grade digital forensic correlation suite designed to solve complex multi-source cybercrime investigations. Modern digital crimes rarely exist in a single silo — perpetrators orchestrate operations spanning VoIP calls, encrypted chat apps, mule bank accounts, compromised IoT nodes, and highway escape corridors.
+
+TraceGraph ingests heterogeneous raw evidentiary artifacts, normalizes temporal drift across unsynchronized logging hardware, resolves aliases across distributed networks, and reconstructs a mathematically defensible, court-admissible narrative.
+
+[![TraceGraph End-to-End Forensic Reconstruction Pipeline](https://files.catbox.moe/811ved.png)](https://files.catbox.moe/811ved.png)
+<p align="center">
+  <em>Figure 2: Complete 12-Stage Forensic Reconstruction Pipeline (Collect → Hash → Parse → Normalise → Extract Entities → Graph → Correlate → Sequence → Verify → Visualise → Report + Human in the Loop) — <a href="https://files.catbox.moe/811ved.png">View Full Resolution Image</a></em>
+</p>
+
+---
+
+## 📐 Visual Forensic Pipelines & Architecture
+
+### 1. Interactive Forensic Knowledge Graph (77 Nodes)
+
+[![TraceGraph Interactive Cytoscape Graph](https://files.catbox.moe/zv8rxs.jpg)](https://files.catbox.moe/zv8rxs.jpg)
+<p align="center">
+  <em>Figure 3: Interactive Cytoscape Concentric Layout (77 Nodes) — Multi-Modal Entity Inspection & Radar Navigation (<a href="https://files.catbox.moe/zv8rxs.jpg">View Full Image</a>)</em>
+</p>
+
+- **Real-Time Concentric Layout:** Multi-layered rings separate primary suspects from secondary carriers, financial accounts, and IP endpoints with interactive physics forces.
+- **Node Inspection Drawer:** Displays real-time carrier metadata (e.g., *Subscriber 7590-VHVEG*, account contracts, CDR records) backed by 95% GNN association confidence.
+- **Radar Minimap:** Facilitates rapid navigation across massive 70+ node investigative graphs.
+- **Multi-Modal Color Coding:** Direct visual differentiation for Suspects (Red), Phone/CDR (Green), Bank/UPI (Yellow), IP/Cloud (Purple), and CCTV (Pink).
+
+---
+
+### 2. Multi-Modal Network Topology & GNN Structure
+
+[![Multi-Modal Network Topology](https://files.catbox.moe/b6x31f.png)](https://files.catbox.moe/b6x31f.png)
+<p align="center">
+  <em>Figure 4: Multi-Source Topological Mapping (Star, Ring, Router & Criminal Clique Subgraphs) (<a href="https://files.catbox.moe/b6x31f.png">View Full Image</a>)</em>
+</p>
+
+TraceGraph maps heterogeneous crime structures into formal topological representations:
+- **Topology Structuring:** Converts cellular towers (star clusters `C1N0-C1N9`), peer-to-peer money transfers (rings `C2N0-C2N9`), routing infrastructure (backbone switches `C1SW-C5SW`), and criminal collusion syndicates (dense cliques `C5N0-C5N9`) into structured entities.
+- **Graph Neural Network (GNN) Link Scoring:** Employs a 2-layer **GraphSAGE** model (`16 → 64 → 32`) to compute likelihood embeddings across latent suspect-to-event relationships.
+- **Neo4j Cypher Integration:** Streams nodes (`Case`, `ForensicNode`, `TimelineEvent`) and edges (`FORENSIC_LINK`) in real-time, backed by Cytoscape.js canvas rendering.
+
+---
+
+### 3. Computer Vision & CCTV ANPR Engine
+
+[![CCTV Surveillance & ANPR Keyframe Detection](https://files.catbox.moe/dkm3p6.jpg)](https://files.catbox.moe/dkm3p6.jpg)
+<p align="center">
+  <em>Figure 5: Real-World Indian Traffic Camera Keyframes — Vehicle Detection across Day, Dusk & Night Illumination (<a href="https://files.catbox.moe/dkm3p6.jpg">View Full Image</a>)</em>
+</p>
+
+The visual intelligence subsystem processes uncalibrated CCTV footage across challenging Indian lighting environments:
+- **Multi-Illumination Vehicle & Object Detection:** Detects suspect vehicles (cars, freight trucks, buses, auto-rickshaws) across day, twilight, and severe low-light night corridors using fine-tuned **YOLOv8n**.
+- **Automated License Plate Recognition (ANPR):** Performs bilateral noise filtering and Otsu adaptive thresholding before applying Tesseract OCR to extract Indian high-security registration plates (`DL-3C-AZ-9912`).
+- **Camera Metadata Alignment:** Calibrates embedded camera telemetry (timestamp, temperature, sensor compass angle) to reconcile spatial waypoints with cellular CDR records.
+
+---
+
+### 4. Cyber-Physical & IoT Intrusion Testbed
+
+[![IoT & Network Packet Capture Architecture](https://files.catbox.moe/udjcxi.jpg)](https://files.catbox.moe/udjcxi.jpg)
+<p align="center">
+  <em>Figure 6: Cyber-Physical IoT & Wireshark PCAP Capture Testbed Architecture (<a href="https://files.catbox.moe/udjcxi.jpg">View Full Image</a>)</em>
+</p>
+
+TraceGraph incorporates a comprehensive cyber-physical surveillance and network analysis engine trained on real-world Indian university testbed data:
+- **Physical Sensor & Edge Broker Layer:** Accommodates telemetry from ESP32 microcontrollers (air quality, dust, temperature, ultrasonic, camera) and Raspberry Pi edge nodes communicating via MQTT, CoAP, and AMQP.
+- **Network Tap & Port Mirroring:** Ingests live Wireshark PCAPs captured from managed L2 switches, monitoring workstation traffic, mobile endpoints, and simulated Kali attack vectors.
+- **16-Class Attack Classification:** Evaluates 105 protocol flow features using **LightGBM** to flag DoS, DDoS, brute-force, scan, and data exfiltration patterns in milliseconds.
+
+---
+
+##  Machine Learning Architecture
+
+TraceGraph rejects synthetic toy datasets in production. All 7 production models are trained exclusively on authentic Indian forensic data:
+
+| § | Model Subsystem | Architecture | Training Dataset | Benchmark Metrics | Active Endpoint |
+|---|-----------------|--------------|------------------|-------------------|-----------------|
+| **§1** | **Hinglish Vernacular NLP** | Sub-word TF-IDF + Calibrated Logistic Regression | PoliWAM (3,848 real Hindi-English messages) | **77.9% Accuracy** (9 political classes) | `POST /ml/india/predict/intent` |
+| **§2** | **UPI Mule Account Risk** | LightGBM Classifier (300 trees, 6 features) | NPCI Monthly Statistics (Apr 2019 – Dec 2024) | **0.7835 Risk Confidence** | `POST /ml/india/predict/mule` |
+| **§3** | **Bank Statement Anomaly** | Isolation Forest + StandardScaler | AgamiAI Indian Bank Statements | **1.00 Anomaly Prob** (High Severity) | `POST /ml/india/predict/anomaly` |
+| **§4** | **PCAP Network Anomaly** | Calibrated Random Forest (100 estimators) | VIT Bhopal Cyberattack Dataset (600K packets) | **87.0% Detection Rate** | `POST /ml/india/predict/network` |
+| **§5** | **IoT Intrusion Detector** | LightGBM Multi-class (400 trees, 105 features) | MU-IoT Manipur University (393K samples) | **16 Attack Vectors** | `POST /ml/india/predict/iot` |
+| **§6** | **CCTV / ANPR Vision** | Ultralytics YOLOv8n + OpenCV + OCR | Indian Traffic Feeds + Snatch 1.0 Dataset | **96.20% mAP@50** | `POST /ml/india/predict/cctv` |
+| **§7** | **Forensic Link Scorer** | PyTorch GraphSAGE Link Scorer (`16 → 64 → 32`) | Multi-Source Indian Forensic Crime Graph | **95.58% Accuracy** | `POST /ml/india/predict/link-india` |
+
+---
+
+## 🏛️ 10 Integrated Investigative Modules
+
+TraceGraph's web console organizes forensic investigations into 10 dedicated, sequential screens accessible via the unified module switcher:
+
+[![TraceGraph 10 Module Forensic Console Navigation](https://files.catbox.moe/yt0430.png)](https://files.catbox.moe/yt0430.png)
+<p align="center">
+  <em>Figure 7: TraceGraph Unified Forensic Console Navigation Bar — Seamless switching across all 10 investigative stages (<a href="https://files.catbox.moe/yt0430.png">View Full Resolution Image</a>)</em>
+</p>
+
+1. **New Case Upload (01):** Drag-and-drop evidence vault with immediate client-side SHA-256 calculation.
+2. **Evidence Vault (02):** Cryptographic parent-hash chain viewer ensuring zero evidence tampering.
+3. **Knowledge Graph (03):** Interactive visual property graph displaying suspect-to-evidence relationships.
+4. **Unified Timeline (04):** Chronological event stream with hardware RTC clock drift compensation.
+5. **Geospatial Map (05):** Interactive Leaflet GPS map tracking cell tower CDRs, IP geolocations, and vehicle sightings.
+6. **Spatio-Temporal Feasibility (06):** Physical road/air velocity vector validation uncovering impossible alibis.
+7. **Entity Resolution (07):** Multi-modal identity clustering merging IMEIs, Phone Numbers, VPAs, and IP addresses.
+8. **Cross-Case Intelligence (08):** Automated similarity matching against national police cold case databases.
+9. **Hypothesis Builder (09):** Dynamic Beam Search scoring Prosecution Theory Alpha against Defense Alibi Beta.
+10. **Court Certificate (10):** Legally admissible, print-ready evidence report under Section 63(4) BSA 2023.
+
+---
+
+##  Quick Start
 
 ### Prerequisites
-- **Node.js**: v18.0.0 or higher
-- **npm**: v9.0.0 or higher
-- **Python**: v3.10 or v3.11
+- **Python**: 3.10 or 3.11
+- **Node.js**: v18.0.0 or higher (`npm v9+`)
+- **Git**
 
----
+### 1. Clone the Repository
+```sh
+git clone https://github.com/YOUR_USERNAME/TRACE.git
+cd TRACE
+```
 
-### Step 2: Start the Backend API (FastAPI)
-Open a new terminal:
-```bash
+### 2. Launch the Backend API (FastAPI)
+```sh
 cd BACKEND
-
-# (Optional) Create and activate a virtual environment
-python -m venv venv
-# On Windows:
-.\venv\Scripts\activate
-# On Linux/macOS:
-source venv/bin/activate
-
-# Install dependencies
 pip install -r requirements.txt
-
-# Start the backend server
 python run_server.py
 ```
-* **Backend API URL**: `http://127.0.0.1:8001`
-* **Interactive Swagger Documentation**: `http://127.0.0.1:8001/docs`
-* **Neo4j Status Check**: `http://127.0.0.1:8001/neo4j/status`
+- Server launches on **`http://127.0.0.1:8001`**
+- Interactive OpenAPI Documentation (Swagger UI): **`http://127.0.0.1:8001/docs`**
 
----
-
-### Step 3: Start the Frontend Application (Next.js)
-Open a second terminal:
-```bash
-cd FRONTEND
-
-# Install dependencies
+### 3. Launch the Frontend Console (Next.js)
+```sh
+cd ../FRONTEND
 npm install
-
-# Start the dev server
 npm run dev
 ```
-* **Frontend Web Application**: `http://localhost:3000`
-* **Investigation Console**: `http://localhost:3000/console`
+- Web Application launches on **`http://localhost:3000`**
+- Direct Console Access: **`http://localhost:3000/console`**
 
 ---
 
-### Step 4: Run an Investigation with Sample Evidence
+##  API Reference
 
-The repository includes 7 authentic multi-modal forensic files in the `EVIDENCE_SAMPLES/` directory:
+All Indian Machine Learning inference routes are exposed under `/ml/india/predict/*`:
 
-| File Name | Evidence Category | Forensic Context |
-| :--- | :--- | :--- |
-| `01_Mobile_IBM_Telco_CDR.csv` | Mobile & Telecom | Telco Call Detail Records, cell tower IDs, call durations |
-| `02_Social_WhatsApp_Export_Chat.txt` | Social Media | Code-mixed Hinglish chat logs, cash drop rendezvous |
-| `03_CCTV_Surveillance_Intel_Detection.mp4` | Surveillance Video | ANPR highway toll footage, vehicle plate detection |
-| `04_Cloud_Storage_Access_Log.log` | Cloud Infrastructure | IP access logs, exfiltration session tokens |
-| `05_Financial_CreditCard_Fraud_Sample.csv` | Financial Records | Card dispersal, mule transaction micro-splits |
-| `06_Email_RFC822_Communications.mbox` | Email Headers | Extortion notices, SMTP hops, relay IPs |
-| `07_Network_Wireshark_HTTP_Traffic.pcap` | Network PCAP | Packet capture, reverse-proxy communication |
-
-#### Investigation Walkthrough:
-1. Open **`http://localhost:3000/console`** in your browser.
-2. In **01 New Case**, drag and drop files from `EVIDENCE_SAMPLES/`.
-3. Client-side SHA-256 hashes and cryptographic parent-hash chains are computed in real time.
-4. Click **"Run Full Reconstruction"**.
-5. Explore the 10 forensic analysis screens:
-   - **01 New Case**: Secure drag-and-drop evidence staging with cryptographic hashing.
-   - **02 Evidence Vault**: Cryptographic parent-hash ledger and tamper verification.
-   - **03 Knowledge Graph**: Multi-modal network showing suspects, phones, bank accounts, and CCTV ANPR nodes. Toggle **Organic Force**, **Concentric**, or **Radial** layouts.
-   - **04 Timeline**: Chronologically unified event log with hardware clock drift auto-calibrated.
-   - **05 Geospatial**: Dynamic CartoDB Dark Matter map with GPS waypoints extracted from evidence.
-   - **06 Feasibility**: Physics-verified travel conflict engine flagging impossible velocities (>300 km/h).
-   - **07 Entity Resolution**: Merged identities across burner SIMs and financial accounts.
-   - **08 Cross-Case Intel**: Linked syndicate matches across historical FIRs.
-   - **09 Hypotheses**: Dynamic Beam Search Bayesian ranking for Theory Alpha (Prosecution) vs Theory Beta (Defense).
-   - **10 Court Certificate**: Print-optimized legal certificate compliant with **Section 63(4) of the Bharatiya Sakshya Adhiniyam, 2023** with cryptographic seal.
-
----
-
-## 🐳 Docker Deployment (Optional)
-
-To launch the complete multi-service stack with Docker:
-```bash
-docker compose up --build
+### 1. Hinglish Threat & Intent Classification
+```sh
+curl -X POST http://127.0.0.1:8001/ml/india/predict/intent \
+  -H "Content-Type: application/json" \
+  -d '{"text": "paisa bhej de jaldi ATM se"}'
 ```
-Services:
-- Frontend: `http://localhost:3000`
-- Backend API: `http://localhost:8001`
-- ML Service: `http://localhost:8002`
+
+### 2. NPCI UPI Mule Account Risk Detection
+```sh
+curl -X POST http://127.0.0.1:8001/ml/india/predict/mule \
+  -H "Content-Type: application/json" \
+  -d '{"volume_mn": 14439.73, "value_cr": 20637.0, "month_num": 3, "year": 2024}'
+```
+
+### 3. Bank Statement Financial Anomaly
+```sh
+curl -X POST http://127.0.0.1:8001/ml/india/predict/anomaly \
+  -H "Content-Type: application/json" \
+  -d '{"features": {"opening_balance": 9500000, "closing_balance": 100, "interest_rate": 0.0}}'
+```
+
+### 4. Network Packet Attack Classifier
+```sh
+curl -X POST http://127.0.0.1:8001/ml/india/predict/network \
+  -H "Content-Type: application/json" \
+  -d '{"length": 1480, "ttl": 45, "src_port": 50000, "dst_port": 23, "protocol_code": 6}'
+```
 
 ---
 
-## 📁 Repository Structure
+##  Legal & Statutory Compliance
+
+TraceGraph was constructed from the ground up to comply with Indian and international forensic jurisprudence:
+
+- **Section 63(4) Bharatiya Sakshya Adhiniyam (BSA), 2023:** Replaces the former Section 65B of the Indian Evidence Act. Generates cryptographically sealed, court-admissible electronic records documenting software versions, hash integrity, hardware states, and custodian signatures.
+- **CASE / UCO Ontology:** Emits native W3C RDF Turtle (`.ttl`) triples adhering to the Cyber-investigation Analysis Standard Expression.
+- **Immutable SHA-256 Chain of Custody:** Calculates client-side hashes upon file ingestion and links every block digest, providing definitive proof against evidence tampering.
+- **Physical Time-Trust Hardware Model:** Corrects RTC drift across unsynchronized logging devices against authoritative NTP references before sequencing crime timelines.
+
+---
+
+##  Docker Deployment
+
+To spin up the entire distributed infrastructure (FastAPI backend, Next.js frontend, and optional Neo4j instance) via Docker:
+
+```sh
+docker-compose up --build
+```
+
+| Service | Container Port | External URL | Role |
+|---------|----------------|--------------|------|
+| **`backend`** | 8001 | `http://localhost:8001` | FastAPI Python API + 7 India ML Bridges |
+| **`frontend`** | 3000 | `http://localhost:3000` | Next.js 15 Forensic Console Dashboard |
+| **`neo4j`** | 7474 / 7687 | `http://localhost:7474` | Cypher Property Graph Database (Optional) |
+
+---
+
+##  Project Structure
 
 ```
 TRACE/
-├── BACKEND/                        # FastAPI REST API & Orchestration Engine
+├── assets/                                 # Architectural schematics, UI hero, & testbed diagrams
+│   ├── tracegraph-hero.jpg                 # Figure 1: Main landing UI banner
+│   ├── tracegraph-pipeline-workflow.png    # Figure 2: 12-Stage reconstruction pipeline diagram
+│   ├── tracegraph-interactive-graph.jpg    # Figure 3: Interactive Cytoscape graph view (77 nodes)
+│   ├── graph-topology-network.png          # Figure 4: Multi-modal network & GNN topology diagram
+│   ├── cctv-surveillance-detection.jpg     # Figure 5: CCTV keyframe & license plate detection
+│   ├── iot-network-testbed.jpg             # Figure 6: Physical IoT & PCAP testbed architecture
+│   └── tracegraph-modules-navbar.png       # Figure 7: 10 Integrated investigative console navigation
+│
+├── BACKEND/                                # FastAPI Python Microservice (Port 8001)
 │   ├── app/
-│   │   ├── routers/                # Endpoints (cases, evidence, analysis, audit, export, ml, neo4j)
-│   │   ├── schemas/                # Pydantic v2 domain schemas
-│   │   ├── services/               # Core forensic services
-│   │   │   ├── audit_service.py    # Section 63(4) BSA compliance & hash chain
-│   │   │   ├── case_service.py     # Multi-modal correlation pipeline
-│   │   │   ├── cctv_processor.py   # OpenCV keyframe + ANPR plate extraction
-│   │   │   ├── evidence_service.py # Evidence storage & indexing
-│   │   │   ├── ml_bridge.py        # Live PyTorch GNN, LightGBM & RF inference bridge
-│   │   │   └── neo4j_service.py    # Cypher streaming & graph sync
-│   │   ├── config.py               # Environment configuration
-│   │   └── main.py                 # FastAPI application factory
-│   ├── uploads/                    # Secure evidence staging (.gitkeep preserved)
-│   ├── Dockerfile                  # Production container definition
-│   ├── requirements.txt            # Python dependencies (fastapi, uvicorn, torch, neo4j, etc.)
-│   └── run_server.py               # Standalone server launcher (port 8001)
+│   │   ├── main.py                         # Application entry point & route mounting
+│   │   ├── config.py                       # Environment configurations & model directory paths
+│   │   ├── routers/
+│   │   │   ├── cases.py                    # Case ingestion, pipeline execution & graph endpoints
+│   │   │   ├── ml.py                       # Baseline ML endpoints (/ml/predict/*)
+│   │   │   ├── india_ml.py                 # 🇮🇳 Indian real-data ML endpoints (/ml/india/predict/*)
+│   │   │   └── audit.py                    # BSA 2023 court certificate & immutable audit ledger
+│   │   └── services/
+│   │       ├── india_ml_bridge.py          # Loader & inference bridge for 7 Indian models
+│   │       ├── ml_bridge.py                # Loader for baseline PaySim/Elliptic models
+│   │       ├── neo4j_service.py            # Neo4j Cypher streaming with offline fallback
+│   │       └── audit_service.py            # SHA-256 cryptographic chain-of-custody engine
+│   ├── requirements.txt                    # Python dependencies
+│   └── run_server.py                       # Standalone uvicorn launcher
 │
-├── FRONTEND/                       # Next.js 15 + React 19 + Tailwind CSS
+├── FRONTEND/                               # Next.js 15 App Router Frontend (Port 3000)
 │   ├── src/
-│   │   ├── api/                    # Backend API client & client-side hashing
-│   │   ├── app/                    # Next.js App Router (/console, /cases/[id])
-│   │   ├── components/             # CytoscapeGraph, LeafletMap, ConsoleShell, Cursor
-│   │   ├── i18n/                   # English & Hindi bilingual dictionaries
-│   │   ├── lib/                    # Shared utilities & evidence source types
-│   │   ├── pages/                  # 10 Console modules (Page1_NewCase to Page10_CourtCertificate)
-│   │   ├── store/                  # Zustand reactive state stores
-│   │   ├── styles/                 # Theme tokens & variables
-│   │   └── types/                  # TypeScript forensic interfaces
-│   ├── public/                     # Static assets, forensic diagrams & video preview
-│   ├── package.json                # Dependencies & build scripts (name: tracegraph-forensic-engine)
-│   └── tsconfig.json               # TypeScript compiler configuration
+│   │   ├── api/
+│   │   │   ├── backendClient.ts            # Typed client for all Backend & India ML endpoints
+│   │   │   └── evidenceClient.ts           # Evidence upload & hash verification client
+│   │   ├── app/                            # Next.js pages & console routes
+│   │   ├── components/                     # UI components (CytoscapeGraph, LeafletMap, ConsoleShell)
+│   │   ├── pages/                          # 10 investigative module page components
+│   │   └── store/                          # Zustand forensic state stores
+│   ├── package.json                        # Node.js dependencies
+│   └── tsconfig.json                       # TypeScript configuration
 │
-├── ML/                             # Machine Learning Models, Pipeline & Notebooks
-│   ├── models/                     # Serialized model weights (<600 KB each)
-│   │   ├── gnn_link_scorer.pt      # 2-Layer PyTorch GraphSAGE Link Scorer (95.58% Acc)
-│   │   ├── mule_risk_lgbm.joblib   # Calibrated LightGBM Mule Classifier (100% ROC-AUC)
-│   │   ├── link_scorer_rf.joblib   # Calibrated Random Forest Scorer (100% ROC-AUC)
-│   │   ├── hinglish_intent_tfidf.joblib # Vernacular NLP Classifier (98.40% Acc)
-│   │   ├── yolov26.pt              # YOLOv26 SUTRAM Forensic Vision Checkpoint
-│   │   └── model_card.json         # Comprehensive ML benchmark card
-│   ├── fixtures/                   # Verified forensic intelligence artifacts
-│   │   ├── case_001_mule_trail.json # Verified end-to-end multi-modal case fixture
-│   │   └── cctv_intel_extraction.json # Colab-extracted ANPR & biometric payload
-│   ├── notebooks/                  # Colab training & execution notebooks
-│   │   ├── TraceGraph_CCTV_YOLO_OCR_Pipeline.ipynb # YOLO + OpenCV + OCR Colab notebook
-│   │   └── TraceGraph_Colab_Training.ipynb        # Complete GNN & tabular training notebook
-│   ├── tracegraph_ml/              # Core ML library
-│   │   ├── linking/                # GNN model architecture & candidate generation
-│   │   ├── hypotheses/             # Dynamic Beam Search hypothesis optimizer
-│   │   ├── feasibility/            # Spatio-temporal velocity conflict checker
-│   │   ├── timetrust/              # Physical hardware RTC drift calibration
-│   │   └── entities/               # Entity resolution & alias clustering
-│   ├── scripts/                    # Clean production CLI scripts
-│   │   ├── run_case.py             # CLI pipeline runner
-│   │   ├── train_linking.py        # GNN link scorer trainer
-│   │   └── train_ner.py            # Vernacular intent model trainer
-│   ├── metrics/                    # Benchmark metrics JSON across 10 evaluation datasets
-│   └── configs/                    # Dataset specifications (datasets.yaml)
+├── ML/                                     # Machine Learning Pipeline & Notebooks
+│   ├── models/                             # Baseline models (synthetic/PaySim) [git-ignored]
+│   ├── models_new/models/                  # 7 Indian real-data models [git-ignored]
+│   ├── notebooks/                          # Google Colab execution & training notebooks
+│   │   ├── TraceGraph_Indian_Dataset_Training.ipynb
+│   │   └── TraceGraph_CCTV_YOLO_OCR_Pipeline.ipynb
+│   └── scripts/
+│       └── download_models.py              # Checksum verifier and model downloader
 │
-├── EVIDENCE_SAMPLES/               # 7 Authentic Forensic Demo Files (Ready to test)
-│   ├── 01_Mobile_IBM_Telco_CDR.csv
-│   ├── 02_Social_WhatsApp_Export_Chat.txt
-│   ├── 03_CCTV_Surveillance_Intel_Detection.mp4
-│   ├── 04_Cloud_Storage_Access_Log.log
-│   ├── 05_Financial_CreditCard_Fraud_Sample.csv
-│   ├── 06_Email_RFC822_Communications.mbox
-│   └── 07_Network_Wireshark_HTTP_Traffic.pcap
-│
-├── docker-compose.yml              # Multi-container orchestration
-├── .gitignore                      # Clean production git configuration
-└── README.md                       # Comprehensive project documentation
+├── EVIDENCE_SAMPLES/                      # 7 Authentic forensic sample files
+├── docker-compose.yml                      # Multi-container orchestration
+├── .gitignore                              # Clean production ignore rules (model weights excluded)
+└── README.md                               # Documentation
 ```
 
----
+## 📄 License
 
-## ⚖️ Legal & Forensic Compliance
-
-TraceGraph is engineered specifically to meet the strict evidentiary standards of Indian and international cyber law:
-- **Section 63(4) Bharatiya Sakshya Adhiniyam (BSA), 2023**: Replaces legacy 65B Indian Evidence Act certificates. Automatically generates print-ready certificates capturing hash chain integrity, software version, hardware state, and custodian identity.
-- **CASE / UCO Ontology**: Generates native W3C RDF Turtle (`.ttl`) triples aligning with the Cyber-investigation Analysis Standard Expression (CASE).
-- **Cryptographic Hash Chain**: Evidence files are hashed client-side with SHA-256 upon ingestion and linked to the preceding block's digest, guaranteeing tamper detection across the entire chain of custody.
-- **Physical Time-Trust Calibration**: Real hardware RTC drift on disparate logging devices (e.g. CCTV clocks lag by -04m 12s) is dynamically normalized against NTP reference clocks before timeline sequencing.
-
----
+This project is licensed under the [MIT License](LICENSE).
