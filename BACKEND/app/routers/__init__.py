@@ -5,4 +5,5 @@ from app.routers.ml import router as ml_router
 from app.routers.audit import router as audit_router
 from app.routers.export import router as export_router
 from app.routers.neo4j import router as neo4j_router
+from app.routers.india_ml import router as india_ml_router
 

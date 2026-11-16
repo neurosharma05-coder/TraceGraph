@@ -9,7 +9,8 @@ FRONTEND_DIR = TRACE_ROOT / "FRONTEND"
 
 # Storage & Models
 UPLOAD_DIR = BACKEND_DIR / "uploads"
-MODELS_DIR = ML_DIR / "models"
+MODELS_DIR = ML_DIR / "models"                        # old models
+INDIA_MODELS_DIR = ML_DIR / "models_new" / "models"  # Indian real-data models v2
 METRICS_PATH = ML_DIR / "metrics" / "metrics.json"
 MODEL_CARD_PATH = MODELS_DIR / "model_card.json"
 FIXTURE_PATH = ML_DIR / "fixtures" / "case_001_mule_trail.json"
