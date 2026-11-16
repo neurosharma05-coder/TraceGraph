@@ -1,6 +1,6 @@
 /**
  * TraceGraph Live Backend API Client
- * Team: def build() · SUTRAM 2026 · Problem Statement 03
+ * Digital Forensic Crime Reconstruction Framework
  * Connects Next.js Frontend with the FastAPI Forensic ML Backend (Port 8001)
  */
 

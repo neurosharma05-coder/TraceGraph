@@ -1,5 +1,5 @@
 """
-Cross-Case Matching & CCTNS Indexer (Arshia Gupta).
+Cross-Case Matching & CCTNS Indexer.
 Normalizes identifiers (E.164 phones, IMEIs, bank accounts, UPIs),
 hashes them with SHA-256, and queries the CCTNS ledger for repeat offenses.
 """

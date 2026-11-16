@@ -1,5 +1,5 @@
 """
-Entity Extractor (Arshia Gupta).
+Entity Extractor.
 Extracts phone numbers, emails, IPs, IMEIs, account numbers, UPI IDs,
 vehicle plates, amounts and named entities from text and structured records.
 """

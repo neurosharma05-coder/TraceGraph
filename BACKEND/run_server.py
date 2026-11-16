@@ -13,7 +13,7 @@ from app.config import HOST, PORT
 if __name__ == "__main__":
     print("=" * 75)
     print("  TraceGraph Dedicated Forensic Backend API")
-    print("  Team def build() · SUTRAM 2026 · Problem Statement 03")
+    print("  Digital Forensic Crime Reconstruction Platform")
     print(f"  Listening on: http://{HOST}:{PORT}")
     print(f"  Interactive Swagger UI: http://{HOST}:{PORT}/docs")
     print("=" * 75)

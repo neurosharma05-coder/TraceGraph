@@ -1,5 +1,5 @@
 """
-Identity Resolution & Disambiguation (Arshia Gupta).
+Identity Resolution & Disambiguation.
 Performs candidate blocking, RapidFuzz string similarity, and Disjoint-Set (Union-Find)
 to cluster aliases, IMEIs, and phone numbers into consolidated Person / Device entities.
 """

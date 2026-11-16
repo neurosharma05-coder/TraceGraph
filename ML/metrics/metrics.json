@@ -1,7 +1,7 @@
 {
   "evaluation_timestamp": "2026-11-05T19:52:40.196272Z",
-  "team": "def build()",
-  "sutram_competition": "SUTRAM 2026 \u2014 Problem Statement 03",
+  "author": "Anubhav Sharma",
+  "project": "TraceGraph Digital Forensic Framework",
   "compliance": "Section 63(4) Bharatiya Sakshya Adhiniyam (BSA) 2023",
   "datasets_benchmarked": {
     "01_M57_Patents": {

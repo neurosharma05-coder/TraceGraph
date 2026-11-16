@@ -1,5 +1,5 @@
 """
-Financial Flow Tracing & Mule Account Scorer (Arshia Gupta).
+Financial Flow Tracing & Mule Account Scorer.
 Analyzes banking and UPI transaction ledgers:
 1. Identifies pass-through patterns: rapid_pass_through, fan_out, fan_in, cash_out
 2. Computes account topology features (dwell time, in/out ratio, structuring)

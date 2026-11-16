@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Hinglish Intent & Entity Extraction Training (Arshia Gupta).
+Hinglish Intent & Entity Extraction Training.
 Trains Character n-gram TF-IDF + Logistic Regression / Naive Bayes on Hinglish synthetic corpus.
 Serializes model to ML/models/hinglish_intent_tfidf.joblib (<5 MB).
 """

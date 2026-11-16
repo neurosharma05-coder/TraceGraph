@@ -37,7 +37,7 @@
 - [Legal & Statutory Compliance](#-legal--statutory-compliance)
 - [Docker Deployment](#-docker-deployment)
 - [Project Structure](#-project-structure)
-- [Team & License](#-team--license)
+- [Author & License](#-author)
 
 ---
 
@@ -311,6 +311,11 @@ TRACE/
 ├── .gitignore                              # Clean production ignore rules (model weights excluded)
 └── README.md                               # Documentation
 ```
+
+## 👤 Author
+
+**Anubhav Sharma** ([@neurosharma05-coder](https://github.com/neurosharma05-coder))
+- Creator & Lead Architect of TraceGraph
 
 ## 📄 License
 

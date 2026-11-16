@@ -1,8 +1,8 @@
 """
-CCTV Detection & Optical Verification Pipeline (Arshia Gupta).
+CCTV Detection & Optical Verification Pipeline.
 Uses:
 1. OpenCV (cv2) for frame extraction and video stream decoding
-2. YOLOv26 (SUTRAM 2026 Forensic Edition) for Person, Vehicle and License Plate detection
+2. YOLOv26 (Forensic Edition) for Person, Vehicle and License Plate detection
 3. License plate character extraction (morphological edge detection + OCR template/Tesseract)
 4. Optical appearance vector matching with time-gated verification
 """

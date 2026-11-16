@@ -1,6 +1,6 @@
 """
 TraceGraph Dedicated Forensic Backend API
-Team: def build() · SUTRAM 2026 · Problem Statement 03
+Digital Forensic Crime Reconstruction Framework
 
 Orchestrates communication between:
 - FRONTEND (Next.js / React at localhost:3000)

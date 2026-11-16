@@ -1,5 +1,5 @@
 """
-Hinglish / Hindi NER & Intent Classifier (Arshia Gupta).
+Hinglish / Hindi NER & Intent Classifier.
 CPU-friendly architecture:
 1. Script / language detector (English, Hindi Devanagari, Hinglish Romanized)
 2. Character n-gram TF-IDF + Logistic Regression intent classifier

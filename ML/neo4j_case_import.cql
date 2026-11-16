@@ -1,4 +1,4 @@
-// TraceGraph Knowledge Graph Cypher Script — SUTRAM 2026
+// TraceGraph Knowledge Graph Cypher Script
 MERGE (s1:Suspect {id: 'S001', name: 'Vikram Malhotra', role: 'Kingpin'})
 MERGE (s2:Suspect {id: 'S002', name: 'Reena Kapoor', role: 'Mule Coordinator'})
 MERGE (s3:Suspect {id: 'S003', name: 'Raju Verma', role: 'Cash Courier'})

@@ -1,6 +1,5 @@
 """
 TraceGraph Forensic Reconstruction ML API & Serving Engine
-Team: def build() · SUTRAM 2026 · Problem Statement 03
 
 Exposes production REST API endpoints matching Frontend PRD v3:
 - Live Case Pipeline Execution (/cases/{case_id}/run)
