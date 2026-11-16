@@ -25,8 +25,22 @@ venv/
 checkpoints/
 *.pt.bak
 *.ckpt
-*.pt
+
+# ML Model Binary Files (large — regenerate via training notebooks or download)
+# Old models (synthetic/PaySim baseline)
+ML/models/*.pt
+ML/models/*.joblib
 ML/models/easyocr/
+!ML/models/.gitkeep
+
+# New models (Indian real-data)
+ML/models_new/models/*
+!ML/models_new/models/.gitkeep
+
+# Stray weights & weights in root
+yolov8n.pt
+*.pt
+*.joblib
 
 # Environment & Secrets
 .env
@@ -40,6 +54,7 @@ service_account.json
 BACKEND/uploads/*
 !BACKEND/uploads/.gitkeep
 *.log
+!EVIDENCE_SAMPLES/*.log
 *.tmp
 *.temp
 

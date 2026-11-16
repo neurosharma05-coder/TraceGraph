@@ -1,14 +1,26 @@
+# TraceGraph Backend — Python Dependencies
+# Install: pip install -r requirements.txt
+
+# Web Framework
 fastapi>=0.109.0
 uvicorn>=0.27.0
 pydantic>=2.5.0
 python-multipart>=0.0.6
+
+# ML Core
 numpy>=1.24.0
 joblib>=1.3.0
 scikit-learn>=1.3.0
-torch>=2.0.0
 lightgbm>=4.0.0
-neo4j>=5.0.0
+torch>=2.0.0
+
+# Computer Vision — CCTV / ANPR
+ultralytics>=8.0.0
 opencv-python>=4.8.0
 pytesseract>=0.3.10
 
+# Graph Database (optional — falls back gracefully if not running)
+neo4j>=5.0.0
 
+# Optional: full GraphSAGE GNN inference (cosine fallback used if absent)
+# torch-geometric>=2.4.0
