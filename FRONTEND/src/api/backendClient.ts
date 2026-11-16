@@ -414,3 +414,241 @@ export async function exportNeo4jCypher(caseId: string = 'case-001') {
     return null;
   }
 }
+
+// ─────────────────────────────────────────────────────────────────
+// 🇮🇳  INDIA ML BRIDGE — v2 Real Indian Data Endpoints
+//     All endpoints: /ml/india/predict/*
+//     Training data: PoliWAM, NPCI, MU-IoT, VIT Bhopal, AgamiAI
+// ─────────────────────────────────────────────────────────────────
+
+export interface IndiaIntentResponse {
+  text: string;
+  intent: string;
+  confidence: number;
+  allProbabilities: Record<string, number>;
+  modelVersion: string;
+  source: string;
+  latencyMs: number;
+}
+
+export interface IndiaMuleResponse {
+  isMuleRisk: boolean;
+  muleProbability: number;
+  riskTier: 'NORMAL' | 'SUSPICIOUS' | 'CRITICAL';
+  flags: string[];
+  upiContext: {
+    volumeMn: number;
+    valueCr: number;
+    avgTicketRs: number;
+    npciBenchmarkMonth: string;
+  };
+  modelVersion: string;
+  trainingData: string;
+  latencyMs: number;
+}
+
+export interface IndiaAnomalyResponse {
+  isAnomaly: boolean;
+  anomalyProbability: number;
+  severity: 'NONE' | 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  featuresEvaluated: number;
+  modelVersion: string;
+  trainingData: string;
+  latencyMs: number;
+}
+
+export interface IndiaNetworkResponse {
+  isAnomaly: boolean;
+  anomalyProbability: number;
+  attackType: string;
+  flags: string[];
+  packetFeatures: Record<string, number>;
+  modelVersion: string;
+  trainingData: string;
+  latencyMs: number;
+}
+
+export interface IndiaIoTResponse {
+  isIntrusion: boolean;
+  attackType: string;
+  confidence: number;
+  severity: 'NONE' | 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  iotProtocol: string;
+  featuresProvided: number;
+  modelVersion: string;
+  trainingData: string;
+  latencyMs: number;
+}
+
+export interface IndiaGNNLinkResponse {
+  linkProbability: number;
+  isLinked: boolean;
+  riskLevel: 'NONE' | 'LOW' | 'MEDIUM' | 'HIGH';
+  nodeUFeatures: number[];
+  nodeVFeatures: number[];
+  modelVersion: string;
+  trainingData: string;
+  source: string;
+  latencyMs: number;
+}
+
+export interface IndiaMLStatusResponse {
+  india_models_dir: string;
+  loaded: Record<string, boolean>;
+  total_loaded: number;
+  total_expected: number;
+  version: string;
+  compliance: string;
+  gnn_inference: boolean;
+}
+
+/**
+ * §0 — Get status of all 7 Indian ML models
+ */
+export async function fetchIndiaMLStatus(): Promise<IndiaMLStatusResponse | null> {
+  try {
+    const res = await fetch(`${BACKEND_BASE_URL}/ml/india/status`);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * §1 — PoliWAM Hinglish Political Intent Classifier
+ * Classifies Indian political party affiliation from Hinglish text
+ * Training: PoliWAM dataset (LingoIITGN/HuggingFace), 9 party classes
+ */
+export async function predictIndiaIntent(text: string): Promise<IndiaIntentResponse | null> {
+  try {
+    const res = await fetch(`${BACKEND_BASE_URL}/ml/india/predict/intent`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text }),
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * §2 — NPCI UPI Mule Account Risk Scorer
+ * Detects hawala/mule account patterns from UPI monthly transaction stats
+ * Training: NPCI UPI Statistics (Apr 2019–Dec 2024), 69 monthly data points
+ */
+export async function predictIndiaMule(params: {
+  volume_mn: number;
+  value_cr: number;
+  month_num?: number;
+  year?: number;
+  flags?: string[];
+}): Promise<IndiaMuleResponse | null> {
+  try {
+    const res = await fetch(`${BACKEND_BASE_URL}/ml/india/predict/mule`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(params),
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * §3 — Indian Bank Statement Financial Anomaly Detector
+ * Detects structuring / wash trades via IsolationForest
+ * Training: AgamiAI/Indian-Bank-Statements (HuggingFace)
+ */
+export async function predictIndiaAnomaly(params: {
+  features: Record<string, number>;
+  account_id?: string;
+}): Promise<IndiaAnomalyResponse | null> {
+  try {
+    const res = await fetch(`${BACKEND_BASE_URL}/ml/india/predict/anomaly`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(params),
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * §4 — VIT Bhopal Network Packet Attack Classifier
+ * Classifies 7 attack types from Wireshark PCAP features
+ * Training: VIT Bhopal Cyberattack Dataset (600K packets)
+ */
+export async function predictIndiaNetwork(params: {
+  length: number;
+  ttl?: number;
+  protocol_code?: number;
+  src_port?: number;
+  dst_port?: number;
+  pkt_time?: number;
+}): Promise<IndiaNetworkResponse | null> {
+  try {
+    const res = await fetch(`${BACKEND_BASE_URL}/ml/india/predict/network`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(params),
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * §5 — MU-IoT Intrusion Detection (Manipur University)
+ * Classifies 16 IoT attack types from MQTT/CoAP flow features
+ * Training: MU-IoT Dataset (393K samples)
+ */
+export async function predictIndiaIoT(params: {
+  features: Record<string, number>;
+  device_id?: string;
+  protocol_hint?: string;
+}): Promise<IndiaIoTResponse | null> {
+  try {
+    const res = await fetch(`${BACKEND_BASE_URL}/ml/india/predict/iot`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(params),
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * §7 — GraphSAGE Indian Forensic Link Scorer
+ * Scores entity link probability using 16-feature Indian forensic graph
+ * Training: Indian forensic case graph (GraphSAGE 16-feature)
+ */
+export async function predictIndiaGNNLink(params: {
+  features_u: number[];
+  features_v: number[];
+  edge_type?: string;
+}): Promise<IndiaGNNLinkResponse | null> {
+  try {
+    const res = await fetch(`${BACKEND_BASE_URL}/ml/india/predict/link-india`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(params),
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}

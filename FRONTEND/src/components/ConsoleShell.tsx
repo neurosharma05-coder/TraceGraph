@@ -16,7 +16,8 @@ import Page8_CrossCaseIntel from '../pages/Page8_CrossCaseIntel';
 import Page9_HypothesisBuilder from '../pages/Page9_HypothesisBuilder';
 import Page10_CourtCertificate from '../pages/Page10_CourtCertificate';
 import Cursor from './Cursor';
-import { Lock } from 'lucide-react';
+import { Lock, Cpu } from 'lucide-react';
+import { fetchIndiaMLStatus, IndiaMLStatusResponse } from '../api/backendClient';
 
 export type ConsoleModule =
   | 'upload'
@@ -51,12 +52,16 @@ const NAV_ITEMS: NavItem[] = [
 
 export default function ConsoleShell({ initialModule = 'upload' }: { initialModule?: ConsoleModule }) {
   const [activeModule, setActiveModule] = useState<ConsoleModule>(initialModule);
+  const [indiaML, setIndiaML] = useState<IndiaMLStatusResponse | null>(null);
   const { caseMeta, isLiveConnected, syncFromBackend } = useCaseStore();
   const { language, setLanguage } = useLanguageStore();
   const t = I18N_DICTIONARY[language] || I18N_DICTIONARY.en;
 
   useEffect(() => {
     syncFromBackend('case-001');
+    fetchIndiaMLStatus().then((res) => {
+      if (res) setIndiaML(res);
+    });
   }, [syncFromBackend]);
 
   const handlePipelineComplete = () => setActiveModule('graph');
@@ -107,6 +112,27 @@ export default function ConsoleShell({ initialModule = 'upload' }: { initialModu
               <span>{caseMeta.caseNumber}</span>
               <span style={{ color: 'var(--accent)', fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Sealed</span>
             </span>
+
+            {indiaML && (
+              <span
+                title={`India ML Bridge: ${indiaML.total_loaded}/${indiaML.total_expected} models loaded (${indiaML.compliance})`}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '6px 12px',
+                  borderRadius: '999px',
+                  border: '1px solid rgba(22, 101, 52, 0.25)',
+                  fontSize: '0.74rem',
+                  color: '#15803d',
+                  background: 'rgba(240, 253, 244, 0.8)',
+                  cursor: 'default',
+                }}
+              >
+                <Cpu className="w-3 h-3 text-emerald-600" />
+                <span>India ML ({indiaML.total_loaded}/7)</span>
+              </span>
+            )}
 
             <select
               className="lang"
