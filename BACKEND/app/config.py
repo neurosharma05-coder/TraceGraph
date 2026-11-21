@@ -7,6 +7,10 @@ TRACE_ROOT = BACKEND_DIR.parent
 ML_DIR = TRACE_ROOT / "ML"
 FRONTEND_DIR = TRACE_ROOT / "FRONTEND"
 
+import sys
+if str(ML_DIR) not in sys.path:
+    sys.path.insert(0, str(ML_DIR))
+
 # Storage & Models
 UPLOAD_DIR = BACKEND_DIR / "uploads"
 MODELS_DIR = ML_DIR / "models"                        # old models

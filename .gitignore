@@ -53,6 +53,12 @@ service_account.json
 # Local Uploads & Temporary Data
 BACKEND/uploads/*
 !BACKEND/uploads/.gitkeep
+BACKEND/data/*
+!BACKEND/data/.gitkeep
+*.db
+*.sqlite
+*.sqlite3
+trace.db
 *.log
 !EVIDENCE_SAMPLES/*.log
 *.tmp

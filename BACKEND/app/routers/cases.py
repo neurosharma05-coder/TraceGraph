@@ -1,4 +1,7 @@
+import json
+import asyncio
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import StreamingResponse
 from app.schemas.case import CaseMetadata, CaseCreateRequest, CaseUpdateRequest, SealCaseRequest
 from app.services.case_service import case_service
 from app.services.evidence_service import evidence_service
@@ -53,4 +56,26 @@ def run_case_pipeline(case_id: str):
     if not meta:
         raise HTTPException(status_code=404, detail=f"Case {case_id} not found.")
     return case_service.run_pipeline(case_id)
+
+@router.get("/{case_id}/run/stream")
+async def stream_case_pipeline(case_id: str):
+    """Executes the pipeline with Server-Sent Events (SSE) streaming real-time stage updates."""
+    meta = case_service.get_case_meta(case_id)
+    if not meta:
+        raise HTTPException(status_code=404, detail=f"Case {case_id} not found.")
+
+    async def event_generator():
+        for event in case_service.stream_pipeline(case_id):
+            yield f"data: {json.dumps(event)}\n\n"
+            await asyncio.sleep(0.02)
+
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        }
+    )
 

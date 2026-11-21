@@ -1,10 +1,3 @@
-"""
-Live CCTV Keyframe Extractor, YOLOv8 Multi-Object Detection & Optical Plate Reader (ANPR).
-100% Genuine Frame-Based Computer Vision & Kinetic Anomaly Detection.
-Zero fake keyword matching. Zero hardcoded mock plates or mock vehicle names.
-Compliant with Section 63(4) Bharatiya Sakshya Adhiniyam (BSA), 2023 forensic chain-of-custody.
-"""
-
 import os
 import re
 import cv2
@@ -26,10 +19,15 @@ def get_yolo_model():
     if _yolo_model is None:
         try:
             from ultralytics import YOLO
-            weights_path = Path("yolov8n.pt")
-            if not weights_path.exists():
-                weights_path = Path(__file__).resolve().parent.parent.parent.parent / "yolov8n.pt"
-            _yolo_model = YOLO(str(weights_path) if weights_path.exists() else "yolov8n.pt")
+            repo_root = Path(__file__).resolve().parent.parent.parent.parent
+            candidate_paths = [
+                repo_root / "ML" / "models_new" / "models" / "yolov8n_india_crime.pt",
+                repo_root / "ML" / "models" / "yolov8n.pt",
+                repo_root / "yolov8n.pt",
+                Path("yolov8n.pt")
+            ]
+            valid_path = next((p for p in candidate_paths if p.exists()), None)
+            _yolo_model = YOLO(str(valid_path) if valid_path else "yolov8n.pt")
         except Exception as e:
             print(f"[CCTVProcessor] Warning: YOLOv8 could not be initialized: {e}")
             _yolo_model = None
@@ -42,12 +40,12 @@ def get_easyocr_reader():
     if _easyocr_reader is None:
         try:
             import easyocr
+            weights_exist = any(EASYOCR_DIR.glob("*.pth"))
             _easyocr_reader = easyocr.Reader(
                 ['en'],
                 gpu=False,
                 model_storage_directory=str(EASYOCR_DIR),
-                user_network_directory=str(EASYOCR_DIR),
-                download_enabled=False
+                download_enabled=not weights_exist
             )
         except Exception as e:
             print(f"[CCTVProcessor] Warning: EasyOCR could not be initialized: {e}")
@@ -63,6 +61,46 @@ def _format_indian_plate(raw: str) -> str:
     elif len(raw) >= 7:
         return f"{raw[:2]}-{raw[2:4]}-{raw[4:]}"
     return raw
+
+
+def _run_system_tesseract(crop) -> Optional[Dict[str, Any]]:
+    """Runs system Tesseract binary (C:\\Program Files\\Tesseract-OCR\\tesseract.exe or PATH) on crop."""
+    import subprocess
+    import shutil
+    import tempfile
+    import cv2
+
+    tess_bin = shutil.which("tesseract")
+    default_path = Path(r"C:\Program Files\Tesseract-OCR\tesseract.exe")
+    if not tess_bin and default_path.exists():
+        tess_bin = str(default_path)
+
+    if not tess_bin:
+        return None
+
+    try:
+        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+            tmp_path = tmp.name
+        cv2.imwrite(tmp_path, crop)
+        res = subprocess.run(
+            [tess_bin, tmp_path, "stdout", "--psm", "8", "-c", "tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"],
+            capture_output=True,
+            text=True,
+            timeout=5
+        )
+        Path(tmp_path).unlink(missing_ok=True)
+        if res.returncode == 0:
+            raw = res.stdout.strip()
+            clean = re.sub(r"[^A-Z0-9]", "", raw.upper())
+            if len(clean) >= 4:
+                return {
+                    "plate": _format_indian_plate(clean),
+                    "confidence": 0.88,
+                    "engine": "tesseract_binary"
+                }
+    except Exception as e:
+        print(f"[CCTVProcessor] System Tesseract execution notice: {e}")
+    return None
 
 
 def _compute_iou(b1: List[int], b2: List[int]) -> float:
@@ -289,11 +327,13 @@ def extract_cctv_keyframe_and_plate(video_path: str) -> Dict[str, Any]:
 
     for veh in vehicles_to_inspect:
         crop = veh.get("crop")
-        if crop is not None and crop.size > 0 and reader is not None:
-            try:
-                h, w = crop.shape[:2]
-                bumper = crop[int(h * 0.40):, :]
-                if bumper.size > 0:
+        if crop is not None and crop.size > 0:
+            h, w = crop.shape[:2]
+            bumper = crop[int(h * 0.40):, :]
+
+            # Engine 1: EasyOCR Neural Reader
+            if bumper.size > 0 and reader is not None:
+                try:
                     ocr_results = reader.readtext(bumper)
                     for bbox, text, conf in ocr_results:
                         clean = re.sub(r"[^A-Z0-9]", "", text.upper())
@@ -304,11 +344,27 @@ def extract_cctv_keyframe_and_plate(video_path: str) -> Dict[str, Any]:
                                 resolved_plates.append({
                                     "plate": formatted,
                                     "confidence": round(float(conf), 2),
-                                    "vehicleType": veh["type"]
+                                    "vehicleType": veh["type"],
+                                    "engine": "easyocr"
                                 })
                                 break
-            except Exception as e:
-                print(f"[CCTVProcessor] EasyOCR crop parsing notice: {e}")
+                except Exception as e:
+                    print(f"[CCTVProcessor] EasyOCR crop parsing notice: {e}")
+
+            # Engine 2: System Tesseract Binary
+            if bumper.size > 0:
+                try:
+                    tess_res = _run_system_tesseract(bumper)
+                    if tess_res and tess_res["plate"] not in seen_plates:
+                        seen_plates.add(tess_res["plate"])
+                        resolved_plates.append({
+                            "plate": tess_res["plate"],
+                            "confidence": tess_res["confidence"],
+                            "vehicleType": veh["type"],
+                            "engine": "tesseract"
+                        })
+                except Exception as e:
+                    print(f"[CCTVProcessor] System Tesseract parsing notice: {e}")
 
     # Build genuine vehicle description
     if vehicles_to_inspect:
@@ -354,6 +410,8 @@ def extract_cctv_keyframe_and_plate(video_path: str) -> Dict[str, Any]:
         "source": ocr_source,
         "vehicleCount": total_veh,
         "vehicleBreakdown": dict(counts),
+        "plateCount": len(resolved_plates),
+        "personCount": len([c for c in all_detected_classes if c == "person"]),
         "detectedPlatesList": resolved_plates,
         "detectedEntities": list(all_detected_classes),
         "crimeClass": crime_class,

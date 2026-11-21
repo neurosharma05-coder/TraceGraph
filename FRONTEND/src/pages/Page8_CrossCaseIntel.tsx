@@ -50,7 +50,17 @@ export default function Page8_CrossCaseIntel() {
         </div>
 
         <div className="divide-y divide-[rgba(20,20,22,0.06)]">
-          {records.map((rec) => (
+          {records.length === 0 ? (
+            <div className="text-center text-[var(--soft)] py-16 px-4">
+              <p className="text-sm font-medium text-[var(--ink)]">
+                No cross-case matches found in the national database for current evidence profile.
+              </p>
+              <p className="text-xs mt-2 opacity-70">
+                Upload more evidence or run the full pipeline to trigger similarity scoring against national archives.
+              </p>
+            </div>
+          ) : (
+            records.map((rec) => (
             <div
               key={rec.id}
               className="p-5 hover:bg-black/[0.015] transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4"
@@ -91,7 +101,8 @@ export default function Page8_CrossCaseIntel() {
                 </button>
               </div>
             </div>
-          ))}
+          ))
+        )}
         </div>
       </div>
     </div>

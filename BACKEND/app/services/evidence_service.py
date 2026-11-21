@@ -19,7 +19,7 @@ class EvidenceService:
             return "0000000000000000000000000000000000000000000000000000000000000000"
         return self.files_db[-1]["sha256"]
 
-    def ingest_file(self, filename: str, content: bytes, category: SourceCategory) -> Dict[str, Any]:
+    def ingest_file(self, filename: str, content: bytes, category: SourceCategory, case_id: str = "case-001") -> Dict[str, Any]:
         hasher = hashlib.sha256()
         hasher.update(content)
         file_sha = hasher.hexdigest()
@@ -36,7 +36,7 @@ class EvidenceService:
         ml_summary = f"Ingested evidence sealed under Section 63(4) BSA 2023 with SHA-256 fingerprint {file_sha[:16]}..."
         try:
             from app.services.case_service import case_service
-            parse_info = case_service.process_uploaded_evidence("case-001", filename, content, category)
+            parse_info = case_service.process_uploaded_evidence(case_id, filename, content, category)
             ml_summary = f"ML Parsed: {parse_info.get('newEvents', 0)} events, {parse_info.get('newNodes', 0)} nodes, {parse_info.get('phonesFound', 0)} phones, {parse_info.get('upisFound', 0)} UPIs extracted."
         except Exception as e:
             print(f"[EvidenceService] Live ML parse notice: {e}")

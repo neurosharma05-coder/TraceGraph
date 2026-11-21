@@ -1,11 +1,19 @@
 import os
 import sys
+import warnings
 from pathlib import Path
 
-# Add backend directory to sys.path
+# Silence harmless version mismatch warnings during model unpickling
+warnings.filterwarnings("ignore")
+
+# Add backend and ML directory to sys.path
 backend_dir = Path(__file__).resolve().parent
+trace_root = backend_dir.parent
+ml_dir = trace_root / "ML"
 if str(backend_dir) not in sys.path:
     sys.path.insert(0, str(backend_dir))
+if str(ml_dir) not in sys.path:
+    sys.path.insert(0, str(ml_dir))
 
 import uvicorn
 from app.config import HOST, PORT

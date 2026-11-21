@@ -4,7 +4,7 @@
  * Connects Next.js Frontend with the FastAPI Forensic ML Backend (Port 8001)
  */
 
-const BACKEND_BASE_URL =
+export const BACKEND_BASE_URL =
   process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8001';
 
 export interface BackendHealthResponse {

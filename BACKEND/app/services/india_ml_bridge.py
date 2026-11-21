@@ -226,10 +226,18 @@ class IndiaMlBridge:
     # ─────────────────────────────────────────────────
     # §2 — UPI Mule Risk (NPCI Real Data)
     # ─────────────────────────────────────────────────
-    def predict_mule_india(self, volume_mn: float, value_cr: float,
-                           month_num: int = 6, year: int = 2024) -> Dict[str, Any]:
+    def predict_mule_india(self, volume_mn: float = 5000.0, value_cr: float = 10000.0,
+                           month_num: int = 6, year: int = 2024,
+                           amount: Optional[float] = None, **kwargs) -> Dict[str, Any]:
         t0 = time.time()
         flags = []
+
+        if amount is not None or "amount" in kwargs:
+            amt = float(amount if amount is not None else kwargs.get("amount", 0.0))
+            value_cr = max(value_cr, amt / 100000.0)
+            volume_mn = max(volume_mn, amt / 50000.0)
+            if amt > 200000.0:
+                flags.append("HIGH_VALUE_SINGLE_TICKET_ALERT")
 
         # Indian-context flag rules (RBI/NPCI thresholds)
         if value_cr / max(volume_mn, 1) > 2000:
@@ -278,9 +286,12 @@ class IndiaMlBridge:
     # ─────────────────────────────────────────────────
     # §3 — Financial Anomaly (AgamiAI Bank Statements)
     # ─────────────────────────────────────────────────
-    def predict_financial_anomaly(self, features: Dict[str, float]) -> Dict[str, Any]:
+    def predict_financial_anomaly(self, features: Optional[Dict[str, float]] = None, **kwargs) -> Dict[str, Any]:
         t0 = time.time()
         bundle = self.models.get("anomaly_bank")
+        merged_feat = dict(features) if (features and isinstance(features, dict)) else {}
+        merged_feat.update(kwargs)
+        features = merged_feat
 
         if bundle is not None:
             try:
@@ -329,13 +340,23 @@ class IndiaMlBridge:
     # ─────────────────────────────────────────────────
     # §4 — Network Anomaly (VIT Bhopal — Wireshark PCAP)
     # ─────────────────────────────────────────────────
-    def predict_network_anomaly(self, length: float, ttl: float = 64.0,
+    def predict_network_anomaly(self, length: float = 60.0, ttl: float = 64.0,
                                 protocol_code: int = 6,
                                 src_port: float = 0.0, dst_port: float = 80.0,
-                                pkt_time: float = 0.0) -> Dict[str, Any]:
+                                pkt_time: float = 0.0, features: Optional[Dict[str, Any]] = None, **kwargs) -> Dict[str, Any]:
         t0 = time.time()
         bundle = self.models.get("net_rf")
         flags  = []
+
+        if features and isinstance(features, dict):
+            kwargs.update(features)
+
+        if "duration" in kwargs:
+            pkt_time = float(kwargs["duration"])
+        if "src_bytes" in kwargs:
+            length = float(kwargs["src_bytes"])
+        if "dst_bytes" in kwargs and dst_port == 80.0:
+            dst_port = float(kwargs["dst_bytes"]) % 65535
 
         if ttl < 50:   flags.append("LOW_TTL_POSSIBLE_SCAN")
         if dst_port in [22, 23, 3389, 445, 1433]:
@@ -401,9 +422,12 @@ class IndiaMlBridge:
     # ─────────────────────────────────────────────────
     # §5 — IoT Intrusion (MU-IoT Manipur University)
     # ─────────────────────────────────────────────────
-    def predict_iot_intrusion(self, features: Dict[str, float]) -> Dict[str, Any]:
+    def predict_iot_intrusion(self, features: Optional[Dict[str, float]] = None, **kwargs) -> Dict[str, Any]:
         t0 = time.time()
         bundle = self.models.get("iot_lgbm")
+        merged_feat = dict(features) if (features and isinstance(features, dict)) else {}
+        merged_feat.update(kwargs)
+        features = merged_feat
 
         ATTACK_LABELS = [
             "Normal", "MQTT_Flood", "CoAP_Amplification", "HTTP_DoS",
@@ -547,6 +571,25 @@ class IndiaMlBridge:
             "source": source,
             "latencyMs": round((time.time() - t0) * 1000, 2),
         }
+
+    # ─────────────────────────────────────────────────
+    # Convenience Aliases & Adapters for Service Layer
+    # ─────────────────────────────────────────────────
+    predict_intent = predict_intent_india
+    predict_mule = predict_mule_india
+    predict_anomaly = predict_financial_anomaly
+    predict_network = predict_network_anomaly
+    predict_iot = predict_iot_intrusion
+
+    def predict_link_india(self, temporal_overlap: float = 0.5, geo_dist_km: float = 0.0,
+                           phone_jaccard: float = 0.0, ip_overlap: float = 0.0) -> Dict[str, Any]:
+        """Maps scalar correlation features into 16-dim embeddings for GNN link scoring."""
+        geo_norm = max(0.0, min(1.0, 1.0 - (geo_dist_km / 100.0)))
+        fu = [temporal_overlap, phone_jaccard, ip_overlap, geo_norm] + [0.0] * 12
+        fv = [temporal_overlap, phone_jaccard, ip_overlap, geo_norm] + [0.0] * 12
+        res = self.predict_gnn_link(fu, fv)
+        res["linkConfidence"] = res.get("linkProbability", 0.5)
+        return res
 
 
 # Singleton

@@ -44,33 +44,44 @@ export default function Page9_HypothesisBuilder() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {theories.map((th, idx) => {
-          const isSelected = selectedTheory?.id === th.id;
-          return (
-            <div
-              key={th.id}
-              onClick={() => setSelectedTheory(th)}
-              className={`p-5 rounded-2xl border transition-all cursor-pointer relative ${
-                isSelected
-                  ? 'border-[#141416] bg-white shadow-xs'
-                  : 'border-[rgba(20,20,22,0.1)] bg-white/60 hover:bg-white hover:border-[rgba(20,20,22,0.22)]'
-              }`}
-            >
-              <div className="flex items-center justify-between text-xs mb-2">
-                <span className="tag-num">/ 0{idx + 1} {th.tag}</span>
-                <span className="text-xs font-medium text-[var(--ink)]">
-                  {Math.round(th.probability * 100)}% Likelihood
-                </span>
+      {theories.length === 0 ? (
+        <div className="card-panel p-12 text-center text-[var(--soft)] space-y-2">
+          <p className="text-sm font-medium text-[var(--ink)]">
+            No competing hypotheses synthesized yet.
+          </p>
+          <p className="text-xs">
+            Run the pipeline on Page 1 to generate scored competing hypotheses based on ingested forensic evidence.
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {theories.map((th, idx) => {
+            const isSelected = selectedTheory?.id === th.id;
+            return (
+              <div
+                key={th.id}
+                onClick={() => setSelectedTheory(th)}
+                className={`p-5 rounded-2xl border transition-all cursor-pointer relative ${
+                  isSelected
+                    ? 'border-[#141416] bg-white shadow-xs'
+                    : 'border-[rgba(20,20,22,0.1)] bg-white/60 hover:bg-white hover:border-[rgba(20,20,22,0.22)]'
+                }`}
+              >
+                <div className="flex items-center justify-between text-xs mb-2">
+                  <span className="tag-num">/ 0{idx + 1} {th.tag}</span>
+                  <span className="text-xs font-medium text-[var(--ink)]">
+                    {Math.round(th.probability * 100)}% Likelihood
+                  </span>
+                </div>
+                <h3 className="text-base font-normal text-[var(--ink)] heading-tight">{th.name}</h3>
+                <p className="text-xs text-[var(--soft)] mt-2 line-clamp-2 leading-relaxed">
+                  {th.corePremise}
+                </p>
               </div>
-              <h3 className="text-base font-normal text-[var(--ink)] heading-tight">{th.name}</h3>
-              <p className="text-xs text-[var(--soft)] mt-2 line-clamp-2 leading-relaxed">
-                {th.corePremise}
-              </p>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
 
       {selectedTheory && (
       <div className="card-panel p-6 md:p-8 space-y-6 relative">

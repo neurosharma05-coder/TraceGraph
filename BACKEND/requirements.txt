@@ -24,3 +24,18 @@ neo4j>=5.0.0
 
 # Optional: full GraphSAGE GNN inference (cosine fallback used if absent)
 # torch-geometric>=2.4.0
+
+# Real-Time Intelligence
+geoip2>=4.8.0
+httpx>=0.27.0
+
+# Database Persistence
+sqlalchemy>=2.0.0
+aiosqlite>=0.20.0
+
+# PCAP Analysis
+dpkt>=1.9.8
+
+# Image EXIF (GPS from photo evidence)
+Pillow>=10.0.0
+

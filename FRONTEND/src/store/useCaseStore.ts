@@ -8,20 +8,19 @@ import {
   verifyServerHashChain,
 } from '../api/backendClient';
 
-const INITIAL_CASE_METADATA: CaseMetadata = {
-  id: 'case-001',
-  caseNumber: 'CR-2026-0942',
-  title: 'Operation Mule Trail — NCR Extortion Syndicate',
-  description:
-    'Cross-channel cyber-forensic correlation across CCTV, CDR, Banking and Encrypted Messaging',
-  investigatorName: 'ACP Vikramaditya Singh',
-  investigatorBadge: 'DL-CYB-042',
-  agency: 'Delhi Police Cyber Cell, IFSO',
-  jurisdiction: 'National Capital Region',
-  dateOpened: '2026-02-14',
-  status: 'sealed',
-  sealedAt: '2026-02-14T12:00:00Z',
-  sealedHash: '3b29c40fd3a647d7c6b9076dc5a6b47e2b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e',
+const BLANK_CASE: CaseMetadata = {
+  id: '',
+  caseNumber: '',
+  title: '',
+  description: '',
+  investigatorName: '',
+  investigatorBadge: '',
+  agency: '',
+  jurisdiction: '',
+  dateOpened: new Date().toISOString().slice(0, 10),
+  status: 'ingesting',
+  sealedAt: undefined,
+  sealedHash: undefined,
 };
 
 interface CaseState {
@@ -33,6 +32,7 @@ interface CaseState {
   setFiles: (files: ForensicFile[] | ((prev: ForensicFile[]) => ForensicFile[])) => void;
   addFile: (file: ForensicFile) => void;
   removeFile: (id: string) => void;
+  createCase?: (meta: Partial<CaseMetadata>) => Promise<string>;
   loadDemoPack: () => void;
   sealCase: () => void;
   syncFromBackend: (caseId?: string) => Promise<void>;
@@ -41,7 +41,7 @@ interface CaseState {
 }
 
 export const useCaseStore = create<CaseState>((set, get) => ({
-  caseMeta: INITIAL_CASE_METADATA,
+  caseMeta: BLANK_CASE,
   files: [],
   isLiveConnected: false,
   isSyncing: false,
@@ -59,8 +59,34 @@ export const useCaseStore = create<CaseState>((set, get) => ({
   removeFile: (id) =>
     set((state) => ({ files: state.files.filter((f) => f.id !== id) })),
 
+  createCase: async (meta: Partial<CaseMetadata>) => {
+    const newId = `case-${Date.now()}`;
+    const fullMeta: CaseMetadata = {
+      id: newId,
+      caseNumber: `CR-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`,
+      title: meta.title || 'Digital Evidence Correlation Case',
+      description: meta.description || 'Cross-channel forensic correlation',
+      investigatorName: meta.investigatorName || 'Investigator',
+      investigatorBadge: meta.investigatorBadge || 'TRACE-AUTO',
+      agency: meta.agency || 'Digital Forensics Unit',
+      jurisdiction: meta.jurisdiction || 'National Jurisdiction',
+      dateOpened: new Date().toISOString().slice(0, 10),
+      status: 'ingesting',
+      sealedAt: undefined,
+      sealedHash: undefined,
+      ...meta,
+    };
+    try {
+      await fetchCaseMeta(newId);
+    } catch (e) {
+      console.warn('Case init note:', e);
+    }
+    set({ caseMeta: fullMeta, isLiveConnected: true });
+    return newId;
+  },
+
   loadDemoPack: () => {
-    get().syncFromBackend('case-001');
+    get().syncFromBackend(get().caseMeta.id || 'case-001');
   },
 
   sealCase: () =>

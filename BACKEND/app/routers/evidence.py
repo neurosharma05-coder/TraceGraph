@@ -28,7 +28,8 @@ async def upload_evidence(
     file_record = evidence_service.ingest_file(
         filename=file.filename or "unnamed_evidence.bin",
         content=content,
-        category=source_category
+        category=source_category,
+        case_id=case_id
     )
 
     # Log to Section 63(4) BSA Audit Ledger

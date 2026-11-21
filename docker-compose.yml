@@ -1,9 +1,7 @@
 version: "3.8"
 
 services:
-  # -------------------------------------------------------------
-  # Microservice 1: Next.js Frontend Presentation Layer (L6)
-  # -------------------------------------------------------------
+
   frontend:
     build:
       context: ./FRONTEND
@@ -22,9 +20,6 @@ services:
     networks:
       - trace-network
 
-  # -------------------------------------------------------------
-  # Microservice 2: FastAPI Core Orchestrator & Case Gateway (L1-L2)
-  # -------------------------------------------------------------
   backend:
     build:
       context: ./BACKEND
@@ -36,19 +31,21 @@ services:
     environment:
       - PORT=8001
       - ML_SERVICE_URL=http://ml-service:8002
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=forensic_password
     volumes:
       - ./BACKEND/uploads:/app/uploads
+      - ./BACKEND/data:/app/data
       - ./ML:/app/ML:ro
     depends_on:
       ml-service:
         condition: service_started
+      neo4j:
+        condition: service_started
     networks:
       - trace-network
 
-  # -------------------------------------------------------------
-  # Microservice 3: GNN / Time-Trust ML Intelligence Engine (L3-L5)
-  # -------------------------------------------------------------
-  ml-service:
     build:
       context: ./ML
       dockerfile: Dockerfile
@@ -64,6 +61,23 @@ services:
       - ./ML/models:/app/models
     networks:
       - trace-network
+
+  neo4j:
+    image: neo4j:5-community
+    container_name: trace-neo4j
+    restart: unless-stopped
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      - NEO4J_AUTH=neo4j/forensic_password
+    volumes:
+      - neo4j_data:/data
+    networks:
+      - trace-network
+
+volumes:
+  neo4j_data:
 
 networks:
   trace-network:
