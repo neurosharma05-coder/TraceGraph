@@ -46,6 +46,7 @@ services:
     networks:
       - trace-network
 
+  ml-service:
     build:
       context: ./ML
       dockerfile: Dockerfile
